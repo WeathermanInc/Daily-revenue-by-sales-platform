@@ -1,0 +1,10 @@
+name: Bypass Pages
+on:
+  push:
+    branches-ignore:
+      - '**'
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Pages build bypassed"
