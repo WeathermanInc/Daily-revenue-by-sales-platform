@@ -42,6 +42,7 @@ from reporting.models import (
     PlatformMetrics,
     SkuRow,
 )
+from reporting.new_products import build_new_product_rows
 
 load_dotenv()
 
@@ -2184,6 +2185,7 @@ def assemble_report(report_day: date) -> DailyReport:
     }
 
     sku_rows.sort(key=lambda row: (-row.revenue, row.platform, row.sku))
+    new_product_rows = build_new_product_rows(sku_rows)
 
     report = DailyReport(
         report_day=report_day,
@@ -2192,6 +2194,7 @@ def assemble_report(report_day: date) -> DailyReport:
         category_by_platform=category_by_platform,
         ad_metrics=compute_ad_metrics(platforms, amazon_acos, report_day),
         sku_rows=sku_rows,
+        new_product_rows=new_product_rows,
         status_lines=status_lines,
         reconciliation_revenue_variance=Decimal("0"),
         reconciliation_unit_variance=0,
@@ -2341,6 +2344,34 @@ def build_demo_report(report_day: date | None = None) -> DailyReport:
                 item="Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Black)",
                 units=15,
                 revenue=Decimal("1106.09"),
+            ),
+            SkuRow(
+                platform="Amazon",
+                sku="WM-10001-000-O/S",
+                item="Weatherman Premium Small Compact Mini Umbrella for Travel (Skyline Stripe)",
+                units=2,
+                revenue=Decimal("137.98"),
+            ),
+            SkuRow(
+                platform="Amazon",
+                sku="WM-10001-511-O/S",
+                item="Weatherman Premium Small Compact Mini Umbrella for Travel (Dusty Lavender)",
+                units=3,
+                revenue=Decimal("206.97"),
+            ),
+            SkuRow(
+                platform="Amazon",
+                sku="WM-12005-801-O/S",
+                item="Weatherman Premium Collapsible Travel Umbrella (Rusty Orange)",
+                units=2,
+                revenue=Decimal("150.00"),
+            ),
+            SkuRow(
+                platform="Shopify Direct",
+                sku="WM-10001-000-O/S",
+                item="Travel Umbrella – Skyline Stripe",
+                units=1,
+                revenue=Decimal("55.19"),
             ),
             SkuRow(
                 platform="Walmart",
@@ -2525,6 +2556,7 @@ def build_demo_report(report_day: date | None = None) -> DailyReport:
         category_by_platform=category_by_platform,
         ad_metrics=compute_ad_metrics(platforms, Decimal("32.17") if day == date(2026, 9, 10) else Decimal("18.50"), day),
         sku_rows=sku_rows,
+        new_product_rows=build_new_product_rows(sku_rows),
         period_cards=[],  # filled by upsert_daily_archive
         status_lines=status_lines,
         dashboard_url=dashboard_public_url(day),

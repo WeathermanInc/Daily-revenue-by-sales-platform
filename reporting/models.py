@@ -96,6 +96,27 @@ class SkuRow:
 
 
 @dataclass
+class NewProductChannelRow:
+    """Tracked new-product intro with per-channel units + revenue."""
+
+    key: str
+    label: str
+    units_by_platform: dict[str, int] = field(default_factory=dict)
+    revenue_by_platform: dict[str, Decimal] = field(default_factory=dict)
+
+    @property
+    def total_units(self) -> int:
+        return sum(int(self.units_by_platform.get(k, 0) or 0) for k in PLATFORM_KEYS)
+
+    @property
+    def total_revenue(self) -> Decimal:
+        return sum(
+            (Decimal(str(self.revenue_by_platform.get(k, 0) or 0)) for k in PLATFORM_KEYS),
+            Decimal("0"),
+        )
+
+
+@dataclass
 class AdMetrics:
     amazon_real_acos: Decimal | None = None
     shopify_blended_cos: Decimal | None = None
@@ -122,6 +143,7 @@ class DailyReport:
     category_by_platform: dict[str, dict[str, int]] = field(default_factory=dict)
     ad_metrics: AdMetrics = field(default_factory=AdMetrics)
     sku_rows: list[SkuRow] = field(default_factory=list)
+    new_product_rows: list[NewProductChannelRow] = field(default_factory=list)
     period_cards: list[PeriodCard] = field(default_factory=list)
     status_lines: list[str] = field(default_factory=list)
     reconciliation_revenue_variance: Decimal = Decimal("0")

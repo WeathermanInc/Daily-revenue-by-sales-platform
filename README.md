@@ -80,7 +80,7 @@ Written to:
 - `docs/YYYY-MM-DD.html` (dated snapshot)
 - `docs/email-YYYY-MM-DD.html` (email preview for QA)
 
-Sections: navy **WEATHERMAN** header, period overview cards, platform performance, ad/reconciliation cards, **category units by platform** (including Amazon), and **SKU drilldown · five channels**.
+Sections: navy **WEATHERMAN** header, period overview cards, platform performance, ad/reconciliation cards, **category units by platform** (including Amazon), **new product introductions by channel** (Skyline Stripe / Dusty Lavender / Rusty Orange Trek), and **SKU drilldown · five channels**.
 
 There is **no** green status banner on the dashboard; operational notes stay in logs / email only.
 

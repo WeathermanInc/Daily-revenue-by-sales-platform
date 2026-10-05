@@ -138,6 +138,26 @@ def build_dashboard_html(report: DailyReport) -> str:
             "<tr><td colspan='5' class='empty'>No SKU rows available for this report date.</td></tr>"
         )
 
+    new_product_rows = []
+    for row in report.new_product_rows:
+        cells = [f"<td>{_esc(row.label)}</td>"]
+        for platform_key in PLATFORM_KEYS:
+            units = int(row.units_by_platform.get(platform_key, 0) or 0)
+            rev = row.revenue_by_platform.get(platform_key) or Decimal("0")
+            cells.append(
+                f"<td class='num'>{units}"
+                f"<div class='metric-sub' style='margin-top:2px'>{_esc(money_str(rev))}</div></td>"
+            )
+        cells.append(
+            f"<td class='num'>{row.total_units}"
+            f"<div class='metric-sub' style='margin-top:2px'>{_esc(money_str(row.total_revenue))}</div></td>"
+        )
+        new_product_rows.append("<tr>" + "".join(cells) + "</tr>")
+    if not new_product_rows:
+        new_product_rows.append(
+            "<tr><td colspan='7' class='empty'>No tracked new-product rows configured.</td></tr>"
+        )
+
     platform_header_cells = "".join(
         f"<th>{_esc(PLATFORM_SHORT[k])}</th>" for k in PLATFORM_KEYS
     )
@@ -368,6 +388,22 @@ def build_dashboard_html(report: DailyReport) -> str:
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div class="section-label">New product introductions · units &amp; revenue by channel</div>
+    <div class="panel sku-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            {platform_header_cells}
+            <th class="num">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {''.join(new_product_rows)}
+        </tbody>
+      </table>
     </div>
 
     <div class="section-label">SKU drilldown · five channels</div>

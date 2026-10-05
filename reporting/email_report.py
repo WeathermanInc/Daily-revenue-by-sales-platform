@@ -43,6 +43,22 @@ def build_email_html(report: DailyReport) -> str:
         category_lines.append(f"{label}: {report.category_totals.get(key, 0)}")
     category_block = "<br>\n".join(category_lines)
 
+    new_product_lines = []
+    for row in report.new_product_rows:
+        channel_bits = []
+        for platform in report.ordered_platforms():
+            units = int(row.units_by_platform.get(platform.key, 0) or 0)
+            channel_bits.append(f"{platform.short_label} {units}")
+        new_product_lines.append(
+            f"{row.label}: {' · '.join(channel_bits)} · Total {row.total_units} "
+            f"({money_str(row.total_revenue)})"
+        )
+    new_product_block = (
+        "<br>\n".join(new_product_lines)
+        if new_product_lines
+        else "No tracked new products configured."
+    )
+
     ads = report.ad_metrics
     ad_block = "<br>\n".join(
         [
@@ -83,6 +99,9 @@ def build_email_html(report: DailyReport) -> str:
 
     <p style="margin:0 0 8px;">Category unit totals</p>
     <p style="margin:0 0 16px;">{category_block}</p>
+
+    <p style="margin:0 0 8px;">New product introductions (units by channel)</p>
+    <p style="margin:0 0 16px;">{new_product_block}</p>
 
     <p style="margin:0 0 16px;">{ad_block}</p>
 
