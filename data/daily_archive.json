@@ -2186,10 +2186,10 @@
     "2026-10-03": {
       "platforms": {
         "amazon": {
-          "available": false,
-          "orders": 0,
-          "revenue": 0.0,
-          "units": 0
+          "available": true,
+          "orders": 192,
+          "revenue": 14765.15,
+          "units": 206
         },
         "dsg": {
           "available": false,
@@ -2217,8 +2217,8 @@
         }
       },
       "report_date": "2026-10-03",
-      "total_revenue": 139.98,
-      "total_units": 2
+      "total_revenue": 14905.13,
+      "total_units": 208
     }
   }
 }
