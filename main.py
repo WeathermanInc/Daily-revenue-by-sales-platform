@@ -293,29 +293,51 @@ def _mask_secret(value: str, *, label: str) -> str:
     return f"{label}=present len={len(text)} prefix={prefix!r}…"
 
 
+def _is_static_shopify_admin_token(token: str) -> bool:
+    """True for Shopify Admin API tokens (shpat_… / legacy shpa…)."""
+    text = (token or "").strip().lower()
+    return text.startswith("shpat") or text.startswith("shpa")
+
+
 def get_shopify_access_token(*, force_refresh: bool = False) -> str:
-    """Exchange Dev Dashboard client credentials for a short-lived Admin API token.
+    """Return a Shopify Admin API access token for GraphQL/REST calls.
 
-    POST https://{shop}.myshopify.com/admin/oauth/access_token
-    with grant_type=client_credentials. Tokens expire ~24h; cached in-process
-    and refreshed one minute before expiry.
+    Prefer a static ``SHOPIFY_ACCESS_TOKEN`` (``shpat_`` / ``shpa``) when present
+    and skip the Dev Dashboard ``client_credentials`` exchange — many custom apps
+    return HTTP 400 ``application_cannot_be_found`` on ``/admin/oauth/access_token``.
 
-    Falls back to legacy ``SHOPIFY_ACCESS_TOKEN`` only when client credentials
-    are not configured (migration safety).
+    Only when no static Admin token is configured do we POST
+    ``https://{shop}.myshopify.com/admin/oauth/access_token`` with
+    ``SHOPIFY_CLIENT_ID`` / ``SHOPIFY_CLIENT_SECRET``.
     """
     client_id = os.environ.get("SHOPIFY_CLIENT_ID", "").strip().strip('"').strip("'")
     client_secret = os.environ.get("SHOPIFY_CLIENT_SECRET", "").strip().strip('"').strip("'")
     legacy_token = os.environ.get("SHOPIFY_ACCESS_TOKEN", "").strip().strip('"').strip("'")
-    store_raw = os.environ.get("SHOPIFY_STORE_URL", "").strip()
+    store_raw = (
+        os.environ.get("SHOPIFY_STORE_URL", "").strip()
+        or os.environ.get("SHOPIFY_STORE_DOMAIN", "").strip()
+        or os.environ.get("SHOPIFY_SHOP_NAME", "").strip()
+    )
 
     log.info(
-        "Shopify OAuth env check: %s | %s | %s | SHOPIFY_STORE_URL=%s",
+        "Shopify auth env check: %s | %s | %s | SHOPIFY_STORE_URL=%s",
         _mask_secret(client_id, label="SHOPIFY_CLIENT_ID"),
         _mask_secret(client_secret, label="SHOPIFY_CLIENT_SECRET"),
         _mask_secret(legacy_token, label="SHOPIFY_ACCESS_TOKEN"),
         store_raw or "MISSING",
     )
 
+    # 1) Static Admin API token wins — never attempt OAuth when shpat/shpa is set.
+    if legacy_token and _is_static_shopify_admin_token(legacy_token):
+        log.info(
+            "Shopify: using SHOPIFY_ACCESS_TOKEN directly as X-Shopify-Access-Token "
+            "(prefix=%r…, len=%s); skipping client_credentials OAuth exchange",
+            legacy_token[:5],
+            len(legacy_token),
+        )
+        return legacy_token
+
+    # 2) Dynamic OAuth only when no static Admin token is available.
     if client_id and client_secret:
         now = time.time()
         cached = _SHOPIFY_TOKEN_CACHE.get("access_token")
@@ -332,8 +354,6 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
             len(client_id),
         )
 
-        # Call requests directly so we always capture status + body on failure
-        # (http_request raises before callers can inspect non-2xx bodies).
         try:
             response = requests.post(
                 token_url,
@@ -365,6 +385,15 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
         )
 
         if response.status_code != 200:
+            # Last-resort: non-shpat static token if OAuth app is misconfigured.
+            if legacy_token:
+                log.warning(
+                    "Shopify OAuth failed HTTP %s; falling back to SHOPIFY_ACCESS_TOKEN "
+                    "(prefix=%r…)",
+                    response.status_code,
+                    legacy_token[:4],
+                )
+                return legacy_token
             raise RuntimeError(
                 f"Shopify OAuth token exchange failed: POST {token_url} "
                 f"→ HTTP {response.status_code} body={_redact_oauth_body(body_text)}"
@@ -395,19 +424,18 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
         )
         return access_token
 
-    # Legacy static Admin API token (deprecated path).
+    # 3) Any remaining static token (non-standard prefix) when OAuth is unavailable.
     if legacy_token:
         log.warning(
-            "Using legacy SHOPIFY_ACCESS_TOKEN (len=%s prefix=%r…); "
-            "prefer SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET",
+            "Using SHOPIFY_ACCESS_TOKEN (len=%s prefix=%r…) without client_credentials",
             len(legacy_token),
             legacy_token[:4],
         )
         return legacy_token
 
     raise RuntimeError(
-        "Missing Shopify credentials: set SHOPIFY_CLIENT_ID and SHOPIFY_CLIENT_SECRET "
-        "(preferred), or legacy SHOPIFY_ACCESS_TOKEN. "
+        "Missing Shopify credentials: set SHOPIFY_ACCESS_TOKEN (shpat_… preferred), "
+        "or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET for client_credentials OAuth. "
         f"Env snapshot: {_mask_secret(client_id, label='SHOPIFY_CLIENT_ID')}, "
         f"{_mask_secret(client_secret, label='SHOPIFY_CLIENT_SECRET')}, "
         f"SHOPIFY_STORE_URL={store_raw or 'MISSING'}"
@@ -1268,8 +1296,25 @@ def _sum_sellerboard_metric_group(
 
 
 def _load_sellerboard_csv(url: str, label: str) -> Any:
+    try:
+        response = http_request("GET", url, headers={"Accept": "text/csv,*/*"})
+    except RuntimeError as exc:
+        text = str(exc)
+        if "HTTP 401" in text or "→ HTTP 401" in text:
+            raise RuntimeError(
+                f"Sellerboard {label} URL returned HTTP 401 Unauthorized. "
+                "Verify GitHub Actions secrets SELLERBOARD_DAILY_URL and "
+                "SELLERBOARD_PRODUCT_URL are current permanent automation links "
+                f"(token in URL may have been rotated). Detail: {text}"
+            ) from exc
+        if "HTTP 403" in text or "→ HTTP 403" in text:
+            raise RuntimeError(
+                f"Sellerboard {label} URL returned HTTP 403 Forbidden. "
+                "Confirm the automation link is still enabled in Sellerboard. "
+                f"Detail: {text}"
+            ) from exc
+        raise
     pd = _pandas()
-    response = http_request("GET", url, headers={"Accept": "text/csv,*/*"})
     content_type = (response.headers.get("Content-Type") or "").lower()
     text = response.text
     if "html" in content_type or text.lstrip().lower().startswith("<!doctype") or text.lstrip().lower().startswith("<html"):
@@ -1769,6 +1814,30 @@ def load_archive() -> dict[str, Any]:
         return {"days": {}}
 
 
+def platform_metrics_from_archive(report_day: date, key: str) -> PlatformMetrics | None:
+    """Rebuild PlatformMetrics from data/daily_archive.json when a live source fails."""
+    days = (load_archive().get("days") or {})
+    day = days.get(report_day.isoformat()) or {}
+    row = (day.get("platforms") or {}).get(key) or {}
+    if not row:
+        return None
+    revenue = money_decimal(row.get("revenue"))
+    units = int(row.get("units") or 0)
+    orders = int(row.get("orders") or 0)
+    available = bool(row.get("available")) and (revenue > 0 or units > 0 or orders > 0)
+    if not available and revenue <= 0 and units <= 0:
+        return None
+    return PlatformMetrics(
+        key=key,
+        label=PLATFORM_LABELS.get(key, key),
+        available=True,
+        revenue=revenue,
+        units=units,
+        order_count=orders,
+        note=f"Loaded from archive for {report_day.isoformat()}",
+    )
+
+
 def save_archive(archive: dict[str, Any]) -> None:
     ARCHIVE_PATH.parent.mkdir(parents=True, exist_ok=True)
     ARCHIVE_PATH.write_text(json.dumps(archive, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -1979,6 +2048,10 @@ def _log_source_env_preflight() -> None:
     """Log which integration secrets are present before ingestion (no secret values)."""
     shopify_ok = bool(
         (
+            os.environ.get("SHOPIFY_ACCESS_TOKEN", "").strip()
+            and _is_static_shopify_admin_token(os.environ.get("SHOPIFY_ACCESS_TOKEN", ""))
+        )
+        or (
             os.environ.get("SHOPIFY_CLIENT_ID", "").strip()
             and os.environ.get("SHOPIFY_CLIENT_SECRET", "").strip()
         )
@@ -2066,12 +2139,35 @@ def assemble_report(report_day: date) -> DailyReport:
         status_lines.insert(1 if len(status_lines) else 0, "Sellerboard revenue and units reconciled")
     except Exception as exc:
         reason = str(exc).strip() or repr(exc)
-        log.error("Sellerboard/Amazon ingestion failed — Unavailable reason: %s", reason)
+        if "401" in reason:
+            log.error(
+                "Sellerboard HTTP 401 — verify SELLERBOARD_DAILY_URL / "
+                "SELLERBOARD_PRODUCT_URL secrets: %s",
+                reason,
+            )
+        else:
+            log.error("Sellerboard/Amazon ingestion failed — Unavailable reason: %s", reason)
         log.exception("Sellerboard/Amazon ingestion stacktrace")
-        platforms["amazon"] = PlatformMetrics(
-            key="amazon", label=PLATFORM_LABELS["amazon"], available=False, error=reason
-        )
-        status_lines.append(f"Amazon/Sellerboard Unavailable: {reason}")
+        archived = platform_metrics_from_archive(report_day, "amazon")
+        if archived is not None:
+            archived.note = (
+                f"Archive fallback after Sellerboard failure: {reason}"
+            )[:500]
+            platforms["amazon"] = archived
+            log.warning(
+                "Amazon: using archived revenue=%s units=%s for %s after Sellerboard error",
+                archived.revenue,
+                archived.units,
+                report_day.isoformat(),
+            )
+            status_lines.append(
+                f"Amazon from archive (Sellerboard failed: {reason})"
+            )
+        else:
+            platforms["amazon"] = PlatformMetrics(
+                key="amazon", label=PLATFORM_LABELS["amazon"], available=False, error=reason
+            )
+            status_lines.append(f"Amazon/Sellerboard Unavailable: {reason}")
 
     category_totals = empty_category_counts()
     for cats in category_by_platform.values():

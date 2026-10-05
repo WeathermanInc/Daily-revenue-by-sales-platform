@@ -1,13 +1,4 @@
-# Daily Revenue by Sales Platform (WeathermanInc)
-
-**Workflow display name:** `Daily Revenue Report Pipeline`  
-**Workflow file:** `.github/workflows/daily_report.yml`  
-**Companion workflow:** `Walmart daily sales relay` in `.github/workflows/walmart_ingest.yml`
-
-Use the display name (not the file name) with `gh workflow run` / `gh run list`.
-
----
-
+# Daily Revenue by Sales Platform
 
 Automated previous-day revenue reporting across **Amazon (Sellerboard)**, **Shopify Direct**, **DICK'S SPORTING GOODS**, **Nordstrom**, and **Walmart**, with:
 
@@ -116,7 +107,8 @@ Enable **GitHub Pages** from the `docs/` folder on `main`, then set secret `DASH
 | Sellerboard temporary URLs return HTML | Use permanent automation links only; HTML responses mark Amazon Unavailable |
 | Sellerboard DD/MM vs MM/DD | Default DMY + day-first detection; set `SELLERBOARD_DAYFIRST=us` only for US-formatted exports |
 | Amazon KPI without SKUs | Ensure product URL is itemized (Dashboard by Product / Orders), not daily aggregate-only |
-| Shopify Admin API 401 / Unavailable channels | Use Dev Dashboard **client_credentials**: secrets `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET` (+ `SHOPIFY_STORE_URL`). Pipeline exchanges them for a short-lived token each run (API `2026-07`); no retry on 401/403 |
+| Shopify Admin API 401 / Unavailable channels | Prefer secret `SHOPIFY_ACCESS_TOKEN` (`shpat_…`) — used directly as `X-Shopify-Access-Token` (skips OAuth). Only when unset: Dev Dashboard `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET` → `client_credentials`. Also set `SHOPIFY_STORE_URL`. |
+| Sellerboard HTTP 401 | Rotate/verify `SELLERBOARD_DAILY_URL` + `SELLERBOARD_PRODUCT_URL` automation links. Pipeline logs a clear notice and falls back to archived Amazon totals for that date when available. |
 | Amazon umbrella titles mentioning “Backpack” | Classify **umbrella** before use-case keywords; map `WM-40002-*` Venture Dry Pack to backpack |
 | Shopify Direct inflation | Date-only query tokens + ET calendar-day post-filter; exclude draft/POS/void/cancelled |
 | Nordstrom vs Summary mismatch | Nordstrom uses **Gross Revenue** + **createdAt** ET calendar day + optional Mirakl OR11 (same as Nordstrom Summary). Not Net Product Sales (`subtotal_price`). |
