@@ -6,8 +6,8 @@
     "Shirts": 0,
     "Umbrellas": 2
   },
-  "generated_at_utc": "2026-09-27T18:26:11.413627Z",
-  "gross_revenue": 144.99,
+  "generated_at_utc": "2026-10-05T01:06:24.507236Z",
+  "gross_revenue": 139.98,
   "order_count": 2,
   "queried_ship_node_types": [
     "SellerFulfilled",
@@ -24,35 +24,35 @@
     "SellerFulfilled:Created": 0,
     "SellerFulfilled:Delivered": 0,
     "SellerFulfilled:Shipped": 0,
-    "WFSFulfilled:Acknowledged": 0,
+    "WFSFulfilled:Acknowledged": 2,
     "WFSFulfilled:Created": 0,
-    "WFSFulfilled:Delivered": 1,
-    "WFSFulfilled:Shipped": 1
+    "WFSFulfilled:Delivered": 0,
+    "WFSFulfilled:Shipped": 0
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-09-26",
+  "report_date": "2026-10-03",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 75.0,
-      "item_name": "Weatherman Collapsible Travel Umbrella 40 Inches (Navy Blue)",
-      "sku": "12005-600-221-51-WFS",
+      "gross_revenue": 69.99,
+      "item_name": "Weatherman Travel Umbrella, Wind-Resistant Up to 45 MPH, Auto Open/Close, Navy Blue",
+      "sku": "FBM-10001-600-00003",
       "statuses": [
-        "Delivered"
+        "Acknowledged"
       ],
       "units": 1
     },
     {
       "category": "Umbrellas",
       "gross_revenue": 69.99,
-      "item_name": "Weatherman Compact Travel Umbrella Auto Open 38 Inches (Navy Blue)",
-      "sku": "FBM-10001-600-00003",
+      "item_name": "Weatherman Golf Lite Umbrella Fiberglass 56 Inches (White)",
+      "sku": "FBM-14M00-100-00004",
       "statuses": [
-        "Shipped"
+        "Acknowledged"
       ],
       "units": 1
     }
@@ -62,11 +62,11 @@
   "timezone": "America/New_York",
   "total_units": 2,
   "window_local": {
-    "end_exclusive": "2026-09-27T00:00:00 America/New_York",
-    "start_inclusive": "2026-09-26T00:00:00 America/New_York"
+    "end_exclusive": "2026-10-04T00:00:00 America/New_York",
+    "start_inclusive": "2026-10-03T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-09-27T04:00:00Z",
-    "start_inclusive": "2026-09-26T04:00:00Z"
+    "end_exclusive": "2026-10-04T04:00:00Z",
+    "start_inclusive": "2026-10-03T04:00:00Z"
   }
 }
