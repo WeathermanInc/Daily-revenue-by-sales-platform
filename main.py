@@ -2204,7 +2204,7 @@ def assemble_report(report_day: date) -> DailyReport:
 
 
 def merge_archive_snapshots(prior: dict[str, Any] | None, new: dict[str, Any]) -> dict[str, Any]:
-    """Prefer fresh channel rows, but keep prior revenue when a source regresses to $0."""
+    """Prefer fresh channel rows; keep prior revenue only when the new source failed."""
     if not prior:
         return new
     platforms: dict[str, Any] = {}
@@ -2216,16 +2216,15 @@ def merge_archive_snapshots(prior: dict[str, Any] | None, new: dict[str, Any]) -
         old_rev = float(old.get("revenue") or 0)
         cur_rev = float(cur.get("revenue") or 0)
         cur_ok = bool(cur.get("available"))
-        if cur_ok and cur_rev > 0:
+        # A successful live fetch (even $0 for a quiet day) replaces prior.
+        if cur_ok:
             platforms[key] = cur
-        elif old_rev > 0 and (not cur_ok or cur_rev <= 0):
+        elif old_rev > 0:
             platforms[key] = old
             log.info(
-                "Archive merge: preserved prior %s revenue=%s (new was %s/available=%s)",
+                "Archive merge: preserved prior %s revenue=%s (new unavailable/zero)",
                 key,
                 old_rev,
-                cur_rev,
-                cur_ok,
             )
         else:
             platforms[key] = cur if cur else old
@@ -2239,7 +2238,7 @@ def merge_archive_snapshots(prior: dict[str, Any] | None, new: dict[str, Any]) -
     }
 
 
-def upsert_daily_archive(report: DailyReport) -> None:
+def upsert_daily_archive(report: DailyReport, *, force: bool = False) -> None:
     """Insert/overwrite target_date in data/daily_archive.json and refresh period cards."""
     archive = load_archive()
     key = report.target_date.isoformat()
@@ -2248,9 +2247,15 @@ def upsert_daily_archive(report: DailyReport) -> None:
     any_ok = any(p.available for p in report.platforms.values())
     snap = snapshot_day(report)
 
-    if prior and not any_ok and float(prior.get("total_revenue") or 0) > 0:
+    if (
+        prior
+        and not any_ok
+        and not force
+        and float(prior.get("total_revenue") or 0) > 0
+    ):
         log.warning(
-            "Archive upsert skipped for %s — all channels unavailable and prior revenue exists",
+            "Archive upsert skipped for %s — all channels unavailable and prior revenue exists "
+            "(pass --force to overwrite)",
             key,
         )
         days[key] = prior
@@ -2259,7 +2264,16 @@ def upsert_daily_archive(report: DailyReport) -> None:
         save_archive(archive)
         return
 
-    merged = merge_archive_snapshots(prior, snap)
+    if force:
+        # Force refresh: trust the live snapshot; do not keep stale Unavailable rows.
+        merged = snap
+        log.info(
+            "Archive upsert: force overwrite for %s (live total=%s)",
+            key,
+            snap.get("total_revenue"),
+        )
+    else:
+        merged = merge_archive_snapshots(prior, snap)
     days[key] = merged
     # Align in-memory report channel revenues with merged archive for dashboard cards.
     for key_p, pdata in (merged.get("platforms") or {}).items():
@@ -2268,6 +2282,9 @@ def upsert_daily_archive(report: DailyReport) -> None:
             report.platforms[key_p].units = int(pdata.get("units") or 0)
             report.platforms[key_p].order_count = int(pdata.get("orders") or 0)
             report.platforms[key_p].available = bool(pdata.get("available"))
+            # Clear stale Unavailable error text when the channel recovered.
+            if report.platforms[key_p].available:
+                report.platforms[key_p].error = None
     report.ad_metrics = compute_ad_metrics(
         report.platforms,
         report.ad_metrics.amazon_real_acos,
@@ -2276,9 +2293,9 @@ def upsert_daily_archive(report: DailyReport) -> None:
     report.period_cards = build_period_cards(report, days)
     archive["days"] = days
     save_archive(archive)
-    if prior:
+    if prior and not force:
         log.info("Archive upsert: merged/overwrote entry for %s (total=%s)", key, merged["total_revenue"])
-    else:
+    elif not prior:
         log.info("Archive upsert: inserted new entry for %s", key)
 
 
@@ -2830,14 +2847,20 @@ def env_flag(name: str) -> bool:
     return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
-def run(demo: bool = False, skip_email: bool = False, target_date: date | None = None) -> int:
+def run(
+    demo: bool = False,
+    skip_email: bool = False,
+    target_date: date | None = None,
+    force: bool = False,
+) -> int:
     report_day = target_date or resolve_target_date()
     skip_email = skip_email or env_flag("SKIP_EMAIL")
     log.info(
-        "Building daily revenue report for target_date=%s (demo=%s skip_email=%s)",
+        "Building daily revenue report for target_date=%s (demo=%s skip_email=%s force=%s)",
         "demo/2026-09-10" if demo and target_date is None else report_day.isoformat(),
         demo,
         skip_email,
+        force,
     )
 
     if demo:
@@ -2847,7 +2870,7 @@ def run(demo: bool = False, skip_email: bool = False, target_date: date | None =
     report.dashboard_url = dashboard_public_url(report.report_day)
 
     # Persist/refresh archive + period cards for this target_date (backfill-safe upsert).
-    upsert_daily_archive(report)
+    upsert_daily_archive(report, force=force)
 
     dated, latest = write_dashboard(report, DOCS_DIR)
     log.info("Wrote dashboard %s and %s", dated, latest)
@@ -2915,7 +2938,7 @@ def main() -> None:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="With --backfill, re-fetch days that already exist in the archive",
+        help="Overwrite archive for target_date (or with --backfill, re-fetch existing days)",
     )
     parser.add_argument(
         "--seed-baseline",
@@ -2967,7 +2990,7 @@ def main() -> None:
             "falling back to demo report for local verification"
         )
         demo = True
-    sys.exit(run(demo=demo, skip_email=args.skip_email or demo, target_date=target))
+    sys.exit(run(demo=demo, skip_email=args.skip_email or demo, target_date=target, force=args.force))
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ on:
         type: boolean
         default: false
       force_backfill:
-        description: 'Re-fetch days that already exist in the archive'
+        description: 'Force overwrite archive for target_date (also re-fetches existing days when backfill=true)'
         required: true
         type: boolean
         default: false
@@ -87,11 +87,14 @@ jobs:
           if [ -n "${{ github.event.inputs.target_date }}" ]; then
             ARGS+=(--date "${{ github.event.inputs.target_date }}")
           fi
+          # --force works for single-day refresh (overwrite stale Unavailable rows)
+          # and for full-month backfill when combined with backfill=true.
+          if [ "${{ github.event.inputs.force_backfill }}" = "true" ]; then
+            ARGS+=(--force)
+          fi
           if [ "${{ github.event.inputs.backfill }}" = "true" ]; then
+            # Full-month backfill always skips email (bulk job).
             ARGS+=(--backfill --skip-email)
-            if [ "${{ github.event.inputs.force_backfill }}" = "true" ]; then
-              ARGS+=(--force)
-            fi
           fi
           echo "Running: python main.py ${ARGS[*]}"
           python main.py "${ARGS[@]}"
