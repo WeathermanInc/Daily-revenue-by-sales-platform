@@ -1,4 +1,4 @@
-"""Hosted Daily Revenue Dashboard HTML matching the WEATHERMAN layout."""
+"""Hosted Daily Revenue Dashboard HTML (MARCO / WEATHERMAN brand by repo)."""
 from __future__ import annotations
 
 import html
@@ -7,6 +7,7 @@ import shutil
 from decimal import Decimal
 from pathlib import Path
 
+from reporting.branding import resolve_site_context
 from reporting.models import (
     CATEGORY_LABELS,
     CATEGORY_ORDER,
@@ -28,6 +29,8 @@ def _esc(value: object) -> str:
 def build_dashboard_html(report: DailyReport) -> str:
     # Always derive header date from the active report target (never hardcode).
     long_date = report.format_target_date()
+    site = resolve_site_context()
+    brand = site.brand
     subtitle_channels = (
         f"Amazon + Shopify Direct + DICK'S SPORTING GOODS + NORDSTROM + Walmart · "
         f"{report.revenue_metric} · ET calendar day 00:00–23:59:59"
@@ -144,7 +147,7 @@ def build_dashboard_html(report: DailyReport) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Daily Revenue Dashboard · {_esc(long_date)}</title>
+  <title>{_esc(brand)} · Daily Revenue Dashboard · {_esc(long_date)}</title>
   <style>
     :root {{
       --navy: #0B192C;
@@ -319,7 +322,7 @@ def build_dashboard_html(report: DailyReport) -> str:
 </head>
 <body>
   <header class="header">
-    <div class="brand">WEATHERMAN</div>
+    <div class="brand">{_esc(brand)}</div>
     <h1>Daily Revenue Dashboard</h1>
     <div class="sub">{_esc(subtitle_channels)} · {_esc(long_date)}</div>
   </header>
@@ -393,6 +396,7 @@ def build_dashboard_html(report: DailyReport) -> str:
 def write_dashboard(report: DailyReport, docs_dir: Path) -> tuple[Path, Path]:
     """Write dated dashboard HTML, then copy it to docs/index.html (latest)."""
     docs_dir.mkdir(parents=True, exist_ok=True)
+    site = resolve_site_context()
     html_body = build_dashboard_html(report)
 
     dated = docs_dir / f"{report.target_date.isoformat()}.html"
@@ -403,8 +407,10 @@ def write_dashboard(report: DailyReport, docs_dir: Path) -> tuple[Path, Path]:
     shutil.copyfile(dated, latest)
 
     log.info(
-        "Dashboard written for target_date=%s → %s (copied to %s)",
+        "Dashboard written for target_date=%s brand=%s pages_base=%s → %s (copied to %s)",
         report.format_target_date(),
+        site.brand,
+        site.pages_base,
         dated.name,
         latest.name,
     )

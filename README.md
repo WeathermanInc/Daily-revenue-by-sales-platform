@@ -3,19 +3,26 @@
 Automated previous-day revenue reporting across **Amazon (Sellerboard)**, **Shopify Direct**, **DICK'S SPORTING GOODS**, **Nordstrom**, and **Walmart**, with:
 
 1. A plain-text-style **Brevo HTML email** (Image 1 layout)
-2. A hosted **WEATHERMAN Daily Revenue Dashboard** under `docs/` (Image 2 layout)
+2. A hosted **Daily Revenue Dashboard** under `docs/` (Image 2 layout)
 
 The GitHub Actions workflow **`Daily Revenue Report Pipeline`** (file: `.github/workflows/daily_report.yml`) runs daily at **14:35 UTC (10:35 AM ET)** (`35 14 * * *`) and can also be triggered via `workflow_dispatch` (`target_date`, `backfill`, `force_backfill`, `send_email`).
 
 ```bash
 # List / trigger (use the workflow display name, not the file name):
-gh workflow list --repo WeathermanInc/Daily-revenue-by-sales-platform
-gh run list --repo WeathermanInc/Daily-revenue-by-sales-platform --workflow "Daily Revenue Report Pipeline" --limit 5
-gh workflow run "Daily Revenue Report Pipeline" --repo WeathermanInc/Daily-revenue-by-sales-platform \
+gh workflow list --repo OWNER/Daily-revenue-by-sales-platform
+gh run list --repo OWNER/Daily-revenue-by-sales-platform --workflow "Daily Revenue Report Pipeline" --limit 5
+gh workflow run "Daily Revenue Report Pipeline" --repo OWNER/Daily-revenue-by-sales-platform \
   -f send_email=true -f target_date=YYYY-MM-DD -f backfill=false -f force_backfill=false
 ```
 
-Hosted dashboard: https://mg22mex.github.io/Daily-revenue-by-sales-platform/
+### Hosted dashboards (repo-aware branding)
+
+| GitHub repo | Brand header | Pages URL |
+|---|---|---|
+| **mg22mex**/Daily-revenue-by-sales-platform | **MARCO** | https://mg22mex.github.io/Daily-revenue-by-sales-platform/ |
+| **WeathermanInc**/Daily-revenue-by-sales-platform | **WEATHERMAN** | https://weathermaninc.github.io/Daily-revenue-by-sales-platform/ |
+
+Local runs default to **MARCO** / the mg22mex Pages host. Override with `DASHBOARD_BRAND` or `DASHBOARD_PUBLIC_URL` when needed.
 
 ---
 
@@ -80,11 +87,11 @@ Written to:
 - `docs/YYYY-MM-DD.html` (dated snapshot)
 - `docs/email-YYYY-MM-DD.html` (email preview for QA)
 
-Sections: navy WEATHERMAN header, period overview cards, platform performance, ad/reconciliation cards, **category units by platform** (including Amazon), and **SKU drilldown · five channels**.
+Sections: navy brand header (**MARCO** on mg22mex / local, **WEATHERMAN** on WeathermanInc), period overview cards, platform performance, ad/reconciliation cards, **category units by platform** (including Amazon), and **SKU drilldown · five channels**.
 
 There is **no** green status banner on the dashboard; operational notes stay in logs / email only.
 
-Enable **GitHub Pages** from the `docs/` folder on `main`, then set secret `DASHBOARD_PUBLIC_URL` to the Pages **site root** (no trailing file name), e.g. `https://mg22mex.github.io/Daily-revenue-by-sales-platform`. Each run writes `docs/{YYYY-MM-DD}.html` and copies it to `docs/index.html`; Brevo CTAs always link the dated file so older emails keep resolving.
+Enable **GitHub Pages** from the `docs/` folder on `main`. The pipeline auto-selects the Pages root from `GITHUB_REPOSITORY` (see branding table above). Optional secret `DASHBOARD_PUBLIC_URL` overrides only when it matches that repo’s host. Each run writes `docs/{YYYY-MM-DD}.html` and copies it to `docs/index.html`; Brevo CTAs always link the dated file so older emails keep resolving.
 
 ---
 
@@ -132,7 +139,8 @@ Enable **GitHub Pages** from the `docs/` folder on `main`, then set secret `DASH
 | `REPORT_RECIPIENTS` | Yes | Comma/semicolon emails. Defaults include marco/rick/christine/margo/sajjad/mollie + `slease@saxadvisorygroup.com` |
 | `BREVO_SENDER_EMAIL` | Recommended | Verified Brevo sender |
 | `BREVO_SENDER_NAME` | Optional | Default `Weatherman Revenue` |
-| `DASHBOARD_PUBLIC_URL` | Recommended | GitHub Pages **site root** (no filename). CTA always appends `/{YYYY-MM-DD}.html` |
+| `DASHBOARD_PUBLIC_URL` | Optional | Pages site root override (must match the running repo host). Auto: mg22mex or weathermaninc `.github.io/...` |
+| `DASHBOARD_BRAND` | Optional | Force header brand (`MARCO` / `WEATHERMAN`). Auto from `GITHUB_REPOSITORY`. |
 | `SHOPIFY_AD_SPEND` | Optional | Day’s Shopify ad spend (USD) |
 | `SHOPIFY_ADS_JSON_PATH` / `SHOPIFY_ADS_CSV_*` | Optional | Dated ad-spend feeds |
 | `MIRAKL_API_KEY` / `MIRAKL_SHOP_ID` | Optional | Align Nordstrom with Summary (OR11 Mirakl-only orders) |

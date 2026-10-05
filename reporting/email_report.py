@@ -1,6 +1,7 @@
 """HTML email body matching the TripleWhale-style daily revenue layout."""
 from __future__ import annotations
 
+from reporting.branding import dated_dashboard_url
 from reporting.models import (
     CATEGORY_LABELS,
     CATEGORY_ORDER,
@@ -59,10 +60,7 @@ def build_email_html(report: DailyReport) -> str:
         or dashboard_url.endswith("/index.html")
         or dashboard_url.rstrip("/").endswith("Daily-revenue-by-sales-platform")
     ):
-        dashboard_url = (
-            "https://mg22mex.github.io/Daily-revenue-by-sales-platform/"
-            f"{day.isoformat()}.html"
-        )
+        dashboard_url = dated_dashboard_url(day.isoformat())
 
     return f"""<!DOCTYPE html>
 <html>

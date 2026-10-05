@@ -28,6 +28,7 @@ except ImportError:  # optional for local --demo without venv deps
     def load_dotenv() -> bool:  # type: ignore[misc]
         return False
 
+from reporting.branding import resolve_site_context
 from reporting.categories import category_for, empty_category_counts
 from reporting.dashboard import write_dashboard
 from reporting.email_report import build_email_html, build_subject
@@ -2027,16 +2028,19 @@ def dashboard_public_url(report_day: date) -> str:
 
     Always returns ``…/{YYYY-MM-DD}.html`` so historical Brevo emails keep working
     after ``index.html`` is overwritten by a later run.
+
+    Brand/host follow the running repo (``GITHUB_REPOSITORY``):
+    WeathermanInc → weathermaninc.github.io · mg22mex/local → mg22mex.github.io.
     """
-    default_base = "https://mg22mex.github.io/Daily-revenue-by-sales-platform"
-    base = os.environ.get("DASHBOARD_PUBLIC_URL", "").strip() or default_base
-    base = base.rstrip("/")
-    # Secrets sometimes include /index.html or another filename — strip to the site root.
-    if base.lower().endswith(".html"):
-        base = base.rsplit("/", 1)[0].rstrip("/")
-    if not base:
-        base = default_base
-    return f"{base}/{report_day.isoformat()}.html"
+    site = resolve_site_context()
+    log.info(
+        "Dashboard site context: brand=%s owner=%s pages_base=%s repo=%s",
+        site.brand,
+        site.owner,
+        site.pages_base,
+        site.repository or "(local)",
+    )
+    return f"{site.pages_base}/{report_day.isoformat()}.html"
 
 
 def _env_present(*keys: str) -> list[str]:
