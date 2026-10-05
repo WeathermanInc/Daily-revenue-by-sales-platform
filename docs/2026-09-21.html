@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Revenue Dashboard · September 21, 2026</title>
+  <style>
+    :root {
+      --navy: #0B192C;
+      --bg: #F3F5F7;
+      --card: #ffffff;
+      --text: #1F2937;
+      --muted: #6B7280;
+      --blue: #3F51B5;
+      --teal: #0F766E;
+      --teal-mid: #14919B;
+      --green: #2E7D32;
+      --border: #E5E7EB;
+      --accent-bar: #5C6BC0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header {
+      background: var(--navy);
+      color: #fff;
+      padding: 22px 28px 20px;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      opacity: 0.95;
+    }
+    .header h1 {
+      margin: 8px 0 6px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .header .sub {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+    .wrap {
+      padding: 20px 24px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .section-label {
+      margin: 18px 0 10px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .period-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .period-card {
+      border-radius: 10px;
+      padding: 18px 16px;
+      color: #fff;
+      min-height: 110px;
+    }
+    .period-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    .period-value {
+      margin-top: 10px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .period-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .ad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent-bar);
+      border-radius: 10px;
+      padding: 14px 14px 16px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    .metric-label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .metric-value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a237e;
+    }
+    .metric-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .tables {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 14px;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    .panel h3 {
+      margin: 0;
+      padding: 12px 14px;
+      font-size: 13px;
+      background: #EEF2F7;
+      border-bottom: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #F8FAFC;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    td.num, th.num { text-align: right; white-space: nowrap; }
+    td.empty { color: var(--muted); text-align: center; padding: 18px; }
+    .sku-panel { margin-top: 8px; }
+    @media (max-width: 1100px) {
+      .period-grid, .platform-grid, .ad-grid, .tables {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 700px) {
+      .period-grid, .platform-grid, .ad-grid, .tables {
+        grid-template-columns: 1fr;
+      }
+      .wrap { padding: 14px; }
+      .header { padding-left: 14px; padding-right: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">WEATHERMAN</div>
+    <h1>Daily Revenue Dashboard</h1>
+    <div class="sub">Amazon + Shopify Direct + DICK&#x27;S SPORTING GOODS + NORDSTROM + Walmart · September 21, 2026</div>
+  </header>
+
+  <main class="wrap">
+    <div class="period-grid">
+      
+            <div class="period-card" style="background:#3F51B5;">
+              <div class="period-label">Yesterday</div>
+              <div class="period-value">$19,187.70</div>
+              <div class="period-sub">277 units</div>
+            </div>
+            
+            <div class="period-card" style="background:#0F766E;">
+              <div class="period-label">Month to Date</div>
+              <div class="period-value">$372,065.05</div>
+              <div class="period-sub">5888 units · Walmart Sep 1–21 coverage</div>
+            </div>
+            
+            <div class="period-card" style="background:#14919B;">
+              <div class="period-label">This Month Forecast</div>
+              <div class="period-value">$531,521.50</div>
+              <div class="period-sub">21 of 30 days complete</div>
+            </div>
+            
+            <div class="period-card" style="background:#2E7D32;">
+              <div class="period-label">Last Month</div>
+              <div class="period-value">$514,952.97</div>
+              <div class="period-sub">7,194 units · validated Aug archive</div>
+            </div>
+            
+    </div>
+
+    <div class="section-label">Sales platform performance</div>
+    <div class="platform-grid">
+      
+            <div class="metric-card">
+              <div class="metric-label">Amazon REVENUE</div>
+              <div class="metric-value">$16,138.18</div>
+              <div class="metric-sub">226 units · Real ACOS 21.80%</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">Shopify Direct REVENUE</div>
+              <div class="metric-value">$2,801.12</div>
+              <div class="metric-sub">43 units · 28 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">DICK&#x27;S SPORTING GOODS REVENUE</div>
+              <div class="metric-value">$140.40</div>
+              <div class="metric-sub">6 units · 4 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">NORDSTROM REVENUE</div>
+              <div class="metric-value">$34.00</div>
+              <div class="metric-sub">1 units · 1 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">Walmart REVENUE</div>
+              <div class="metric-value">$74.00</div>
+              <div class="metric-sub">1 units · 1 orders · Exact-date relay</div>
+            </div>
+            
+    </div>
+
+    <div class="section-label">Ad metrics &amp; reconciliation</div>
+    <div class="ad-grid">
+      
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY BLENDED COST OF SALES</div>
+        <div class="metric-value">57.55%</div>
+        <div class="metric-sub">Ad spend ÷ Shopify order revenue · lower is better</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY REVENUE PER AD DOLLAR</div>
+        <div class="metric-value">1.74x</div>
+        <div class="metric-sub">Shopify order revenue ÷ ad spend · higher is better</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY AD SPEND</div>
+        <div class="metric-value">$1,712.27</div>
+        <div class="metric-sub">Amazon excluded</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY RECONCILIATION</div>
+        <div class="metric-value">$0.00</div>
+        <div class="metric-sub">Direct + DSG + Nordstrom variance · 0 units</div>
+      </div>
+    
+    </div>
+
+    <div class="section-label">Category unit performance</div>
+    <div class="tables">
+      <div class="panel">
+        <h3>All-platform category unit totals</h3>
+        <table>
+          <thead><tr><th>Category</th><th class="num">Total</th></tr></thead>
+          <tbody>
+            <tr><td>Total umbrellas sold</td><td class='num'>221</td></tr><tr><td>Backpack</td><td class='num'>1</td></tr><tr><td>Poncho</td><td class='num'>2</td></tr><tr><td>Hat</td><td class='num'>0</td></tr><tr><td>Shirts</td><td class='num'>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Category units by platform</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amazon</th><th>Shopify Direct</th><th>DSG</th><th>Nordstrom</th><th>Walmart</th>
+              <th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Total umbrellas sold</td><td class='num'>175</td><td class='num'>38</td><td class='num'>6</td><td class='num'>1</td><td class='num'>1</td><td class='num'>221</td></tr><tr><td>Backpack</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>1</td></tr><tr><td>Poncho</td><td class='num'>1</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>2</td></tr><tr><td>Hat</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td></tr><tr><td>Shirts</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label">SKU drilldown · five channels</div>
+    <div class="panel sku-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>SKU</th>
+            <th>Item</th>
+            <th class="num">Units</th>
+            <th class="num">Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Amazon</td><td>FBA-10001-600-00003</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Navy Blue)</td><td class='num'>22</td><td class='num'>$1,517.78</td></tr><tr><td>Amazon</td><td>FBA3-12005-001-221-51</td><td>Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Black)</td><td class='num'>15</td><td class='num'>$1,124.85</td></tr><tr><td>Amazon</td><td>FBA2-11005-600-221-55</td><td>Weatherman Long Stick Windproof Large Umbrellas for Rain (Navy Blue)</td><td class='num'>9</td><td class='num'>$765.00</td></tr><tr><td>Amazon</td><td>FBA 10001-310-00007</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Sage)</td><td class='num'>11</td><td class='num'>$758.89</td></tr><tr><td>Amazon</td><td>FBA2-12005-600-221-51</td><td>Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Navy Blue)</td><td class='num'>9</td><td class='num'>$674.91</td></tr><tr><td>Amazon</td><td>FBA_12005-310-00003</td><td>Weatherman Premium Collapsible Small Travel Umbrella Compact - Windproof, Resists Up to 55 MPH Winds - Foldable Travel Umbrellas for Rain &amp; Wind - Easy Auto Open w/Strong Fiberglass Frame (Sage)</td><td class='num'>9</td><td class='num'>$666.00</td></tr><tr><td>Amazon</td><td>FBA_11005-310-00002</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Sage)</td><td class='num'>7</td><td class='num'>$595.00</td></tr><tr><td>Amazon</td><td>FBA-14M00-100-00004</td><td>Weatherman Umbrella - Golf Lite Umbrella Extra Large Big Oversize Windproof for Golf Bag Push Cart w/ UV Protection - Waterproof Heavy Duty Umbrellas for Rain Sun for Men Women - Resists Up to 55 MPH Winds (White)</td><td class='num'>6</td><td class='num'>$540.00</td></tr><tr><td>Amazon</td><td>FBA-11005-001-221-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Black)</td><td class='num'>6</td><td class='num'>$510.00</td></tr><tr><td>Amazon</td><td>11005-001-221-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Black)</td><td class='num'>5</td><td class='num'>$425.00</td></tr><tr><td>Amazon</td><td>FBA-14M00-600-00003</td><td>Weatherman Umbrella - Golf Lite Umbrella Extra Large Big Oversize Windproof for Golf Bag Push Cart w/ UV Protection - Waterproof Heavy Duty Umbrellas for Rain Sun for Men Women - Resists Up to 55 MPH Winds (Navy Blue)</td><td class='num'>4</td><td class='num'>$379.96</td></tr><tr><td>Amazon</td><td>FBA-10001-001-00001</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Black)</td><td class='num'>6</td><td class='num'>$344.95</td></tr><tr><td>Amazon</td><td>FBA-10001-100-00002</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (White)</td><td class='num'>4</td><td class='num'>$275.96</td></tr><tr><td>Amazon</td><td>WM-10001-511-O/S</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Dusty Lavender)</td><td class='num'>4</td><td class='num'>$275.96</td></tr><tr><td>Amazon</td><td>FBA-11004-200-219-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Red)</td><td class='num'>3</td><td class='num'>$252.00</td></tr><tr><td>Amazon</td><td>FBA_12005-100-00004</td><td>Weatherman Premium Collapsible Small Travel Umbrella Compact - Windproof, Resists Up to 55 MPH Winds - Foldable Travel Umbrellas for Rain &amp; Wind - Easy Auto Open w/Strong Fiberglass Frame (White)</td><td class='num'>3</td><td class='num'>$218.28</td></tr><tr><td>Amazon</td><td>FBA-10001-790-321-44</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Neon Yellow)</td><td class='num'>3</td><td class='num'>$206.97</td></tr><tr><td>Amazon</td><td>14M06-NVGA-00009 - FBA</td><td>Weatherman Golf Lite Umbrella, Extra Large Windproof for Golf Bag &amp; Push Cart, UV Protection, Waterproof Heavy Duty Rain &amp; Sun Umbrella, Resists 55 MPH Winds (TrueTimber Viper Camo)</td><td class='num'>2</td><td class='num'>$182.00</td></tr><tr><td>Amazon</td><td>WM-23001-310-M/L</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – M/L – (Sage)</td><td class='num'>1</td><td class='num'>$179.62</td></tr><tr><td>Amazon</td><td>1K000-200-00012</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach Red</td><td class='num'>5</td><td class='num'>$169.95</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-M/L</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$169.00</td></tr><tr><td>Amazon</td><td>11005-997-00014</td><td>Weatherman Long Stick Windproof Large Umbrellas for Rain (Sunlit Butter)</td><td class='num'>2</td><td class='num'>$166.00</td></tr><tr><td>Shopify Direct</td><td>WM-40002-135</td><td>Venture Dry Pack</td><td class='num'>1</td><td class='num'>$159.00</td></tr><tr><td>Amazon</td><td>12006-NVGA-00021 - FBA</td><td>Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (TrueTimber Viper Camo)</td><td class='num'>2</td><td class='num'>$154.00</td></tr><tr><td>Amazon</td><td>FBA-12005-200-221-51</td><td>Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Red)</td><td class='num'>2</td><td class='num'>$148.00</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>2</td><td class='num'>$148.00</td></tr><tr><td>Amazon</td><td>1K00-310-00019-FBA</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Sage)</td><td class='num'>4</td><td class='num'>$140.49</td></tr><tr><td>Amazon</td><td>FBA-10000-200-419-44</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Red)</td><td class='num'>2</td><td class='num'>$137.98</td></tr><tr><td>Amazon</td><td>10001-889-00014</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel - Windproof, Compact, Easy Auto Open - Resists Up to 45 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Whispy Blue)</td><td class='num'>2</td><td class='num'>$135.86</td></tr><tr><td>Amazon</td><td>FBA-10001-001-00001</td><td>Weatherman Umbrella - Premium Small Compact Mini Umbrella for Travel - Windproof Umbrella Resists Up to 72 KPH Winds - Travel Umbrellas for Rain, Wind, Purse, Pocket, Backpack, Car - Portable Travel Umbrella Easy Auto Open Close w/ Strong Fiberglass Frame (Black)</td><td class='num'>2</td><td class='num'>$135.86</td></tr><tr><td>Amazon</td><td>FBA-1K001-DT2-00009</td><td>Weatherman Kids Umbrella Daniel Tiger – Toddler &amp; Child Umbrella for Boys &amp; Girls – Pinch-Proof, Soft Edges, Lightweight Stick Umbrella – Durable Travel Umbrellas for School, Park, Beach (Katerina)</td><td class='num'>3</td><td class='num'>$119.97</td></tr><tr><td>Amazon</td><td>1K000-889-00015</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Whispy Blue)</td><td class='num'>3</td><td class='num'>$102.00</td></tr><tr><td>Amazon</td><td>1K001-GRD-00011</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Gradient)</td><td class='num'>3</td><td class='num'>$102.00</td></tr><tr><td>Amazon</td><td>FBA-14M00-AA1-00006</td><td>Golf Lite Umbrella Arnie’s Army Extra Large Oversize Wind Resistant Golf Umbrella for Golf Bag Push Cart with UV Protection Waterproof Heavy Duty Umbrella for Rain and Sun for Men Women Resists Up to 55 MPH Winds</td><td class='num'>1</td><td class='num'>$101.00</td></tr><tr><td>Amazon</td><td>14M06-VGA-00009 - FBA</td><td>Weatherman Golf Lite Umbrella, Extra Large Windproof for Golf Bag &amp; Push Cart, UV Protection, Waterproof Heavy Duty Rain &amp; Sun Umbrella, Resists 55 MPH Winds (TrueTimber Viper Camo - VGA)</td><td class='num'>1</td><td class='num'>$91.00</td></tr><tr><td>Amazon</td><td>FBA-14M00-001-00001</td><td>Weatherman Umbrella - Golf Lite Umbrella Extra Large Big Oversize Windproof for Golf Bag Push Cart w/ UV Protection - Waterproof Heavy Duty Umbrellas for Rain Sun for Men Women - Resists Up to 55 MPH Winds (Black)</td><td class='num'>1</td><td class='num'>$91.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$90.00</td></tr><tr><td>Shopify Direct</td><td>14M00-100-00004</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$90.00</td></tr><tr><td>Shopify Direct</td><td>14M00-790-00012</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$90.00</td></tr><tr><td>Shopify Direct</td><td>WM-12006-464-O/S</td><td>Folds of Honor Trek Umbrella – America250</td><td class='num'>3</td><td class='num'>$88.80</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$84.00</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$84.00</td></tr><tr><td>Amazon</td><td>FBA_11005-310-00002</td><td>Weatherman Umbrella - Premium Long Stick Umbrella for Travel, Outdoor Use, City Walking - Windproof Big Large Umbrellas for 2 People - Huge Extra Large Umbrellas for Rain, Wind, Car - Full Size Auto Open Sleek Stick Umbrellas for Rain (Sage)</td><td class='num'>1</td><td class='num'>$82.81</td></tr><tr><td>Amazon</td><td>FBA-12005-AP1-221-51</td><td>Weatherman Arnold Palmer Compact Collapsible Umbrella for Car and Backpack - Windproof, Resists Up to 55 MPH Winds - Protection From Wind, Rain &amp; Sun (Classic)</td><td class='num'>1</td><td class='num'>$79.00</td></tr><tr><td>Amazon</td><td>12006-VGA-00021 - FBA</td><td>Weatherman Premium Collapsible Travel Umbrella - Windproof, Compact, Easy Auto Open - Resists Up to 55 MPH Winds - Perfect for Rain, Wind, Backpack, Car Folding Umbrella (TrueTimber Viper Camo - VGA)</td><td class='num'>1</td><td class='num'>$77.00</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-200-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-200-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>WM-12006-464-O/S</td><td>Folds of Honor Trek Umbrella – America250</td><td class='num'>2</td><td class='num'>$74.00</td></tr><tr><td>Walmart</td><td>FBM-12005-100-00004</td><td>Weatherman Umbrella - Collapsible Umbrella - Windproof Umbrella Resists Up to 55 MPH Winds (White)</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>Shopify Direct</td><td>14M00-100-00004</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$69.00</td></tr><tr><td>Shopify Direct</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$69.00</td></tr><tr><td>Shopify Direct</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$69.00</td></tr><tr><td>Amazon</td><td>WM-10001-000-O/S</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Skyline Stripe)</td><td class='num'>1</td><td class='num'>$68.99</td></tr><tr><td>Amazon</td><td>FBA-1K000-790-00005</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Neon Yellow)</td><td class='num'>2</td><td class='num'>$68.00</td></tr><tr><td>Amazon</td><td>WM-1K001-000-O/S</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Colorstorm)</td><td class='num'>2</td><td class='num'>$68.00</td></tr><tr><td>Amazon</td><td>FBA- 10001-997-00015</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel - Windproof, Compact, Easy Auto Open - Resists Up to 45 MPH Winds - Perfect for Rain, Wind, Backpack, Car - Folding Umbrella (Sunlit Butter)</td><td class='num'>1</td><td class='num'>$67.93</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>BS01-566-XL-01</td><td>Men&#x27;s UPF 20+ Bamboo Sun Shirt</td><td class='num'>1</td><td class='num'>$59.00</td></tr><tr><td>Shopify Direct</td><td>1K001-GRD-00011</td><td>Kids Umbrella – Cosmic Rainbow</td><td class='num'>2</td><td class='num'>$54.40</td></tr><tr><td>Shopify Direct</td><td>11005-100-00004-OLD</td><td>Archived Stick Umbrella</td><td class='num'>1</td><td class='num'>$42.00</td></tr><tr><td>Amazon</td><td>FBA-1K001-DT1-00001</td><td>Weatherman Umbrella for Kids Daniel Tiger – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach</td><td class='num'>1</td><td class='num'>$40.00</td></tr><tr><td>Shopify Direct</td><td>WM-71001-310-XL</td><td>Trail Hound Rain Vest</td><td class='num'>1</td><td class='num'>$39.20</td></tr><tr><td>Shopify Direct</td><td>WM-71001-410-2XL</td><td>Trail Hound Rain Vest</td><td class='num'>1</td><td class='num'>$39.20</td></tr><tr><td>Shopify Direct</td><td>WM-12006-464-O/S</td><td>Folds of Honor Trek Umbrella – America250</td><td class='num'>1</td><td class='num'>$37.00</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$35.30</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Amazon</td><td>1K001-KDS-00016</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Kaleidoscope)</td><td class='num'>1</td><td class='num'>$34.00</td></tr><tr><td>NORDSTROM</td><td>1K00-310-00019</td><td>Kids Umbrella</td><td class='num'>1</td><td class='num'>$34.00</td></tr><tr><td>Shopify Direct</td><td>1K00-310-00019</td><td>Kids Umbrella</td><td class='num'>1</td><td class='num'>$34.00</td></tr><tr><td>Shopify Direct</td><td>1K001-GRD-00011</td><td>Kids Umbrella – Cosmic Rainbow</td><td class='num'>1</td><td class='num'>$34.00</td></tr><tr><td>Shopify Direct</td><td>WM-1K001-000-O/S</td><td>Kids Umbrella – Colorstorm</td><td class='num'>1</td><td class='num'>$34.00</td></tr><tr><td>Amazon</td><td>1K000-200-00012</td><td>Weatherman Umbrella - Golf Umbrella - Windproof Sports Umbrellas Resists Up to 55 MPH Winds - Available in 2 Sizes and 5 Colors (Red)</td><td class='num'>1</td><td class='num'>$33.90</td></tr><tr><td>Amazon</td><td>1K000-732-00013</td><td>Weatherman Umbrella - Golf Umbrella - Windproof Sports Umbrellas Resists Up to 55 MPH Winds - Available in 2 Sizes and 5 Colors (Rusty Orange)</td><td class='num'>1</td><td class='num'>$33.90</td></tr><tr><td>Amazon</td><td>1K000-732-00013</td><td>Weatherman Umbrella - kids Umbrella - Windproof kid Umbrellas Resists Up to 55 MPH Winds - Kid Umbrellas Girls Boys Toddlers Child - Soft Edges, Pinch-Proof, Comfortable Grip Design (Rusty Orange)</td><td class='num'>1</td><td class='num'>$33.00</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$31.10</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$31.10</td></tr><tr><td>Shopify Direct</td><td>WM-1K001-000-O/S</td><td>Kids Umbrella – Colorstorm</td><td class='num'>1</td><td class='num'>$27.20</td></tr><tr><td>Shopify Direct</td><td>1K001-900-00017</td><td>Folds of Honor Kids Umbrella – Guiding Light</td><td class='num'>1</td><td class='num'>$23.40</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>1K000-200-00012</td><td>Kids Umbrella</td><td class='num'>1</td><td class='num'>$14.30</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>1K000-790-00005</td><td>Kids Umbrella</td><td class='num'>1</td><td class='num'>$14.30</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>1K000-889-00015</td><td>Kids Umbrella</td><td class='num'>1</td><td class='num'>$14.30</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$5.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

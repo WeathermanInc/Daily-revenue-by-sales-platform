@@ -1,0 +1,108 @@
+name: Daily Revenue Report Pipeline
+
+on:
+  schedule:
+    # Daily at 14:35 UTC (10:35 AM Eastern / EDT)
+    - cron: '35 14 * * *'
+  workflow_dispatch:
+    inputs:
+      send_email:
+        description: 'Send daily email via Brevo?'
+        required: true
+        type: boolean
+        default: false
+      target_date:
+        description: 'Report date YYYY-MM-DD (empty = yesterday ET)'
+        required: false
+        type: string
+        default: ''
+      backfill:
+        description: 'Backfill archive (prior month start → target_date) + seed baseline'
+        required: true
+        type: boolean
+        default: false
+      force_backfill:
+        description: 'Re-fetch days that already exist in the archive'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily-revenue-report
+  cancel-in-progress: false
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute Daily Revenue Pipeline
+        env:
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          SHOPIFY_STORE_URL: ${{ secrets.SHOPIFY_STORE_URL }}
+          # Optional legacy fallback while migrating off static Admin tokens
+          SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+          WALMART_CLIENT_ID: ${{ secrets.WALMART_CLIENT_ID }}
+          WALMART_CLIENT_SECRET: ${{ secrets.WALMART_CLIENT_SECRET }}
+          SELLERBOARD_DAILY_URL: ${{ secrets.SELLERBOARD_DAILY_URL }}
+          SELLERBOARD_PRODUCT_URL: ${{ secrets.SELLERBOARD_PRODUCT_URL }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          REPORT_RECIPIENTS: ${{ secrets.REPORT_RECIPIENTS }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+          BREVO_SENDER_NAME: ${{ secrets.BREVO_SENDER_NAME }}
+          SHOPIFY_AD_SPEND: ${{ secrets.SHOPIFY_AD_SPEND }}
+          DASHBOARD_PUBLIC_URL: ${{ secrets.DASHBOARD_PUBLIC_URL }}
+          REPORT_GREETING_NAME: ${{ secrets.REPORT_GREETING_NAME }}
+          # Optional — aligns Nordstrom channel with Nordstrom Summary (Shopify+Mirakl).
+          MIRAKL_API_KEY: ${{ secrets.MIRAKL_API_KEY }}
+          MIRAKL_SHOP_ID: ${{ secrets.MIRAKL_SHOP_ID }}
+          MIRAKL_BASE_URL: ${{ secrets.MIRAKL_BASE_URL }}
+          SKIP_EMAIL: ${{ github.event.inputs.send_email == 'false' }}
+          REPORT_DATE: ${{ github.event.inputs.target_date }}
+        run: |
+          ARGS=()
+          if [ -n "${{ github.event.inputs.target_date }}" ]; then
+            ARGS+=(--date "${{ github.event.inputs.target_date }}")
+          fi
+          if [ "${{ github.event.inputs.backfill }}" = "true" ]; then
+            ARGS+=(--backfill --skip-email)
+            if [ "${{ github.event.inputs.force_backfill }}" = "true" ]; then
+              ARGS+=(--force)
+            fi
+          fi
+          echo "Running: python main.py ${ARGS[*]}"
+          python main.py "${ARGS[@]}"
+
+      - name: Commit dashboard + archive artifacts
+        run: |
+          if git diff --quiet -- docs data/daily_archive.json data/shopify_ad_spend.json; then
+            echo "No dashboard/archive changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs data/daily_archive.json data/shopify_ad_spend.json
+          git commit -m "data: refresh daily revenue dashboard"
+          git push origin HEAD:main

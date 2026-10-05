@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+*.log
+
+# Nested full-app checkout (tracked separately on mg22mex)
+Daily-revenue-by-sales-platform/
