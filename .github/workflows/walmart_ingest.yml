@@ -31,7 +31,13 @@ jobs:
         env:
           WALMART_CLIENT_ID: ${{ secrets.WALMART_CLIENT_ID }}
           WALMART_CLIENT_SECRET: ${{ secrets.WALMART_CLIENT_SECRET }}
-        run: python scripts/fetch_walmart_sales.py
+        run: |
+          if [ ! -f scripts/fetch_walmart_sales.py ]; then
+            echo "::error::scripts/fetch_walmart_sales.py is missing from the repo root"
+            ls -la scripts 2>/dev/null || true
+            exit 1
+          fi
+          python scripts/fetch_walmart_sales.py
       - name: Commit refreshed summary
         run: |
           if git diff --quiet -- data/walmart_daily_summary.json; then
