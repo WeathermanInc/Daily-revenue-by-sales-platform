@@ -1,4 +1,4 @@
-"""Hosted Daily Revenue Dashboard HTML (MARCO / WEATHERMAN brand by repo)."""
+"""Hosted WEATHERMAN Daily Revenue Dashboard HTML."""
 from __future__ import annotations
 
 import html

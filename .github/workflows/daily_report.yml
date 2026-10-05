@@ -73,10 +73,8 @@ jobs:
           BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
           BREVO_SENDER_NAME: ${{ secrets.BREVO_SENDER_NAME }}
           SHOPIFY_AD_SPEND: ${{ secrets.SHOPIFY_AD_SPEND }}
-          # Brand + Pages host follow github.repository (MARCO/mg22mex vs WEATHERMAN/WeathermanInc).
-          # Secret overrides only when it matches this repo's github.io host.
+          # Optional Pages site-root override (default: this repo's github.io host).
           DASHBOARD_PUBLIC_URL: ${{ secrets.DASHBOARD_PUBLIC_URL }}
-          DASHBOARD_BRAND: ${{ secrets.DASHBOARD_BRAND }}
           REPORT_GREETING_NAME: ${{ secrets.REPORT_GREETING_NAME }}
           # Optional — aligns Nordstrom channel with Nordstrom Summary (Shopify+Mirakl).
           MIRAKL_API_KEY: ${{ secrets.MIRAKL_API_KEY }}

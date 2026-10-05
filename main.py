@@ -2027,10 +2027,8 @@ def dashboard_public_url(report_day: date) -> str:
     """Public GitHub Pages URL for the dated dashboard artifact.
 
     Always returns ``…/{YYYY-MM-DD}.html`` so historical Brevo emails keep working
-    after ``index.html`` is overwritten by a later run.
-
-    Brand/host follow the running repo (``GITHUB_REPOSITORY``):
-    WeathermanInc → weathermaninc.github.io · mg22mex/local → mg22mex.github.io.
+    after ``index.html`` is overwritten by a later run. Brand is always WEATHERMAN;
+    Pages host follows ``DASHBOARD_PUBLIC_URL`` or the running repo's github.io site.
     """
     site = resolve_site_context()
     log.info(

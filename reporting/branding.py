@@ -1,18 +1,19 @@
-"""Repo-aware dashboard brand + GitHub Pages base URL.
+"""WEATHERMAN dashboard brand + GitHub Pages base URL.
 
-Detection order:
-1. ``GITHUB_REPOSITORY`` (set automatically in Actions) — ``WeathermanInc/…`` → WEATHERMAN,
-   ``mg22mex/…`` → MARCO.
-2. Optional overrides: ``DASHBOARD_BRAND``, ``DASHBOARD_PUBLIC_URL``.
-3. Local / unknown context defaults to MARCO + the mg22mex Pages site.
+Brand is always **WEATHERMAN**. Pages host defaults to the WeathermanInc site;
+``DASHBOARD_PUBLIC_URL`` may override. When running in Actions,
+``GITHUB_REPOSITORY`` selects the matching ``*.github.io`` host so each fork's
+CTAs stay self-referencing (brand header remains WEATHERMAN either way).
 """
 from __future__ import annotations
 
 import os
 from dataclasses import dataclass
 
-MG22MEX_PAGES = "https://mg22mex.github.io/Daily-revenue-by-sales-platform"
+WEATHERMAN_BRAND = "WEATHERMAN"
 WEATHERMAN_PAGES = "https://weathermaninc.github.io/Daily-revenue-by-sales-platform"
+# Mirror Pages host when the pipeline runs on the mg22mex fork (brand unchanged).
+MG22MEX_PAGES = "https://mg22mex.github.io/Daily-revenue-by-sales-platform"
 
 
 @dataclass(frozen=True)
@@ -32,38 +33,24 @@ def _normalize_pages_base(raw: str, fallback: str) -> str:
 
 
 def resolve_site_context() -> SiteContext:
-    """Resolve brand name and hosted Pages root for the current deployment."""
+    """Resolve hosted Pages root; brand is always WEATHERMAN."""
     repo = os.environ.get("GITHUB_REPOSITORY", "").strip()
     owner = repo.split("/", 1)[0].lower() if repo else ""
 
-    if owner == "weathermaninc":
-        brand = "WEATHERMAN"
-        default_base = WEATHERMAN_PAGES
-    elif owner == "mg22mex":
-        brand = "MARCO"
+    if owner == "mg22mex":
         default_base = MG22MEX_PAGES
     else:
-        # Local runs and unknown hosts → MARCO / mg22mex Pages.
-        brand = "MARCO"
-        default_base = MG22MEX_PAGES
-
-    brand_override = os.environ.get("DASHBOARD_BRAND", "").strip()
-    if brand_override:
-        brand = brand_override.upper()
+        # WeathermanInc Actions + local / unknown → Weatherman hosted dashboard.
+        default_base = WEATHERMAN_PAGES
 
     secret_url = os.environ.get("DASHBOARD_PUBLIC_URL", "").strip()
-    if owner in {"weathermaninc", "mg22mex"}:
-        # In Actions, prefer the Pages host that matches the running repo so a
-        # stale DASHBOARD_PUBLIC_URL secret cannot cross-link forks.
-        if secret_url and owner in secret_url.lower():
-            pages_base = _normalize_pages_base(secret_url, default_base)
-        else:
-            pages_base = default_base
-    else:
+    if secret_url:
         pages_base = _normalize_pages_base(secret_url, default_base)
+    else:
+        pages_base = default_base
 
     return SiteContext(
-        brand=brand,
+        brand=WEATHERMAN_BRAND,
         pages_base=pages_base,
         repository=repo,
         owner=owner or "local",
