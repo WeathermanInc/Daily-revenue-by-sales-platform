@@ -301,16 +301,17 @@ def _is_static_shopify_admin_token(token: str) -> bool:
     return text.startswith("shpat") or text.startswith("shpa")
 
 
-def get_shopify_access_token(*, force_refresh: bool = False) -> str:
+def get_shopify_access_token(
+    *, force_refresh: bool = False, prefer_oauth: bool = False
+) -> str:
     """Return a Shopify Admin API access token for GraphQL/REST calls.
 
     Prefer a static ``SHOPIFY_ACCESS_TOKEN`` (``shpat_`` / ``shpa``) when present
     and skip the Dev Dashboard ``client_credentials`` exchange — many custom apps
     return HTTP 400 ``application_cannot_be_found`` on ``/admin/oauth/access_token``.
 
-    Only when no static Admin token is configured do we POST
-    ``https://{shop}.myshopify.com/admin/oauth/access_token`` with
-    ``SHOPIFY_CLIENT_ID`` / ``SHOPIFY_CLIENT_SECRET``.
+    When ``prefer_oauth=True`` (e.g. after a GraphQL 401 on a stale shpat), skip the
+    static token and use ``SHOPIFY_CLIENT_ID`` / ``SHOPIFY_CLIENT_SECRET`` instead.
     """
     client_id = os.environ.get("SHOPIFY_CLIENT_ID", "").strip().strip('"').strip("'")
     client_secret = os.environ.get("SHOPIFY_CLIENT_SECRET", "").strip().strip('"').strip("'")
@@ -322,15 +323,20 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
     )
 
     log.info(
-        "Shopify auth env check: %s | %s | %s | SHOPIFY_STORE_URL=%s",
+        "Shopify auth env check: %s | %s | %s | SHOPIFY_STORE_URL=%s prefer_oauth=%s",
         _mask_secret(client_id, label="SHOPIFY_CLIENT_ID"),
         _mask_secret(client_secret, label="SHOPIFY_CLIENT_SECRET"),
         _mask_secret(legacy_token, label="SHOPIFY_ACCESS_TOKEN"),
         store_raw or "MISSING",
+        prefer_oauth,
     )
 
-    # 1) Static Admin API token wins — never attempt OAuth when shpat/shpa is set.
-    if legacy_token and _is_static_shopify_admin_token(legacy_token):
+    # 1) Static Admin API token wins — unless caller asked for OAuth after a 401.
+    if (
+        legacy_token
+        and _is_static_shopify_admin_token(legacy_token)
+        and not prefer_oauth
+    ):
         log.info(
             "Shopify: using SHOPIFY_ACCESS_TOKEN directly as X-Shopify-Access-Token "
             "(prefix=%r…, len=%s); skipping client_credentials OAuth exchange",
@@ -339,7 +345,7 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
         )
         return legacy_token
 
-    # 2) Dynamic OAuth only when no static Admin token is available.
+    # 2) Dynamic OAuth when no static Admin token is available, or after shpat 401.
     if client_id and client_secret:
         now = time.time()
         cached = _SHOPIFY_TOKEN_CACHE.get("access_token")
@@ -387,7 +393,13 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
         )
 
         if response.status_code != 200:
-            # Last-resort: non-shpat static token if OAuth app is misconfigured.
+            # Last-resort: non-shpat / unused static token if OAuth app is misconfigured.
+            if legacy_token and prefer_oauth:
+                raise RuntimeError(
+                    f"Shopify OAuth token exchange failed after static-token 401: "
+                    f"POST {token_url} → HTTP {response.status_code} "
+                    f"body={_redact_oauth_body(body_text)}"
+                )
             if legacy_token:
                 log.warning(
                     "Shopify OAuth failed HTTP %s; falling back to SHOPIFY_ACCESS_TOKEN "
@@ -427,7 +439,7 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
         return access_token
 
     # 3) Any remaining static token (non-standard prefix) when OAuth is unavailable.
-    if legacy_token:
+    if legacy_token and not prefer_oauth:
         log.warning(
             "Using SHOPIFY_ACCESS_TOKEN (len=%s prefix=%r…) without client_credentials",
             len(legacy_token),
@@ -444,9 +456,11 @@ def get_shopify_access_token(*, force_refresh: bool = False) -> str:
     )
 
 
-def _shopify_endpoint() -> tuple[str, dict[str, str]]:
+def _shopify_endpoint(*, prefer_oauth: bool = False) -> tuple[str, dict[str, str]]:
     host = _shopify_store_host()
-    token = get_shopify_access_token()
+    token = get_shopify_access_token(
+        force_refresh=prefer_oauth, prefer_oauth=prefer_oauth
+    )
     headers = {
         "X-Shopify-Access-Token": token,
         "Content-Type": "application/json",
@@ -678,41 +692,63 @@ def _iter_shopify_orders(
         end.isoformat(),
         REVENUE_METRIC,
     )
-    cursor: str | None = None
-    nodes: list[dict[str, Any]] = []
-    skipped_tz = 0
-    while True:
-        response = http_request(
-            "POST",
-            endpoint,
-            headers=headers,
-            json_body={"query": query, "variables": {"cursor": cursor, "query": search}},
-        )
-        body = response.json()
-        if body.get("errors"):
-            raise RuntimeError(f"Shopify GraphQL errors: {body['errors']}")
-        orders = body.get("data", {}).get("orders") or {}
-        for edge in orders.get("edges") or []:
-            node = edge.get("node")
-            if not node:
+
+    def _fetch_all(active_endpoint: str, active_headers: dict[str, str]) -> list[dict[str, Any]]:
+        cursor: str | None = None
+        nodes: list[dict[str, Any]] = []
+        skipped_tz = 0
+        while True:
+            response = http_request(
+                "POST",
+                active_endpoint,
+                headers=active_headers,
+                json_body={"query": query, "variables": {"cursor": cursor, "query": search}},
+            )
+            body = response.json()
+            if body.get("errors"):
+                raise RuntimeError(f"Shopify GraphQL errors: {body['errors']}")
+            orders = body.get("data", {}).get("orders") or {}
+            for edge in orders.get("edges") or []:
+                node = edge.get("node")
+                if not node:
+                    continue
+                created_day = _created_at_et_date(node)
+                # Strict ET calendar-day membership (00:00–23:59:59 ET) via createdAt.
+                if created_day != report_day:
+                    skipped_tz += 1
+                    continue
+                nodes.append(node)
+            page = orders.get("pageInfo") or {}
+            if page.get("hasNextPage") and page.get("endCursor"):
+                cursor = page["endCursor"]
                 continue
-            created_day = _created_at_et_date(node)
-            # Strict ET calendar-day membership (00:00–23:59:59 ET) via createdAt.
-            if created_day != report_day:
-                skipped_tz += 1
-                continue
-            nodes.append(node)
-        page = orders.get("pageInfo") or {}
-        if page.get("hasNextPage") and page.get("endCursor"):
-            cursor = page["endCursor"]
-            continue
-        break
-    if skipped_tz:
-        log.warning(
-            "Shopify post-filter dropped %s order(s) outside ET calendar day %s",
-            skipped_tz,
-            report_day.isoformat(),
-        )
+            break
+        if skipped_tz:
+            log.warning(
+                "Shopify post-filter dropped %s order(s) outside ET calendar day %s",
+                skipped_tz,
+                report_day.isoformat(),
+            )
+        return nodes
+
+    try:
+        nodes = _fetch_all(endpoint, headers)
+    except RuntimeError as exc:
+        detail = str(exc)
+        # Stale shpat_/shpa token → retry once with client_credentials OAuth.
+        if "401" in detail or "Invalid API key" in detail or "unrecognized login" in detail:
+            log.warning(
+                "Shopify GraphQL auth failed with static token (%s); "
+                "retrying with client_credentials OAuth",
+                detail[:180],
+            )
+            _SHOPIFY_TOKEN_CACHE["access_token"] = None
+            _SHOPIFY_TOKEN_CACHE["expires_at"] = 0.0
+            endpoint, headers = _shopify_endpoint(prefer_oauth=True)
+            nodes = _fetch_all(endpoint, headers)
+        else:
+            raise
+
     log.info("Shopify retained %s order(s) for %s", len(nodes), report_day.isoformat())
     return nodes
 

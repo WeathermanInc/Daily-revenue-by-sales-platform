@@ -38,6 +38,11 @@ concurrency:
 
 jobs:
   run-pipeline:
+    # Cron must run on WeathermanInc only — mg22mex keeps the same workflow for
+    # manual dispatch/testing, but must not send a second scheduled Brevo email.
+    if: >
+      github.event_name != 'schedule' ||
+      github.repository == 'WeathermanInc/Daily-revenue-by-sales-platform'
     runs-on: ubuntu-latest
 
     steps:
