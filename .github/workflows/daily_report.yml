@@ -69,6 +69,11 @@ jobs:
           SHOPIFY_STORE_URL: ${{ secrets.SHOPIFY_STORE_URL }}
           # Optional legacy fallback while migrating off static Admin tokens
           SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ACCESS_TOKEN }}
+          # Alternate weatherman3 store token / custom-app OAuth (tried after primary 401)
+          SHOPIFY_WM3_SHPAT: ${{ secrets.SHOPIFY_WM3_SHPAT }}
+          SHOPIFY_WM3_STORE_URL: ${{ secrets.SHOPIFY_WM3_STORE_URL }}
+          SHOPIFY_CUSTOM_APP_CLIENT_ID: ${{ secrets.SHOPIFY_CUSTOM_APP_CLIENT_ID }}
+          SHOPIFY_CUSTOM_APP_CLIENT_SECRET: ${{ secrets.SHOPIFY_CUSTOM_APP_CLIENT_SECRET }}
           WALMART_CLIENT_ID: ${{ secrets.WALMART_CLIENT_ID }}
           WALMART_CLIENT_SECRET: ${{ secrets.WALMART_CLIENT_SECRET }}
           SELLERBOARD_DAILY_URL: ${{ secrets.SELLERBOARD_DAILY_URL }}

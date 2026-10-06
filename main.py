@@ -231,31 +231,68 @@ def empty_platforms() -> dict[str, PlatformMetrics]:
 
 # Process-local cache for client_credentials tokens (Shopify TTL ≈ 24h).
 _SHOPIFY_TOKEN_CACHE: dict[str, Any] = {"access_token": None, "expires_at": 0.0}
+# Static Admin tokens that already returned GraphQL 401 this process.
+_SHOPIFY_FAILED_STATIC_TOKENS: set[str] = set()
+
+
+def _first_env(*names: str) -> str:
+    for name in names:
+        value = os.environ.get(name, "").strip().strip('"').strip("'")
+        if value:
+            return value
+    return ""
+
+
+def _shopify_static_token_candidates() -> list[tuple[str, str]]:
+    """Ordered (env_name, token) pairs; skips tokens that already 401'd."""
+    out: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for name in ("SHOPIFY_ACCESS_TOKEN", "SHOPIFY_WM3_SHPAT"):
+        value = os.environ.get(name, "").strip().strip('"').strip("'")
+        if not value or value in seen or value in _SHOPIFY_FAILED_STATIC_TOKENS:
+            continue
+        seen.add(value)
+        out.append((name, value))
+    return out
+
+
+def _shopify_oauth_client_pairs() -> list[tuple[str, str, str]]:
+    """Ordered (label, client_id, client_secret) pairs for client_credentials."""
+    out: list[tuple[str, str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for id_name, secret_name in (
+        ("SHOPIFY_CLIENT_ID", "SHOPIFY_CLIENT_SECRET"),
+        ("SHOPIFY_CUSTOM_APP_CLIENT_ID", "SHOPIFY_CUSTOM_APP_CLIENT_SECRET"),
+    ):
+        client_id = os.environ.get(id_name, "").strip().strip('"').strip("'")
+        client_secret = os.environ.get(secret_name, "").strip().strip('"').strip("'")
+        if not client_id or not client_secret:
+            continue
+        key = (client_id, client_secret)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((id_name, client_id, client_secret))
+    return out
 
 
 def _shopify_store_host() -> str:
     """Resolve myshopify host from SHOPIFY_STORE_URL (or common aliases)."""
-    # Preferred: SHOPIFY_STORE_URL. Aliases: SHOPIFY_STORE_DOMAIN, SHOPIFY_SHOP_NAME.
-    store_raw = (
-        os.environ.get("SHOPIFY_STORE_URL", "").strip()
-        or os.environ.get("SHOPIFY_STORE_DOMAIN", "").strip()
-        or os.environ.get("SHOPIFY_SHOP_NAME", "").strip()
+    store_raw = _first_env(
+        "SHOPIFY_STORE_URL",
+        "SHOPIFY_STORE_DOMAIN",
+        "SHOPIFY_SHOP_NAME",
+        "SHOPIFY_WM3_STORE_URL",
     )
     if not store_raw:
         raise RuntimeError(
             "Missing Shopify store host. Set SHOPIFY_STORE_URL "
-            "(preferred), or SHOPIFY_STORE_DOMAIN / SHOPIFY_SHOP_NAME. "
-            "Example: weatherman3.myshopify.com"
+            "(preferred), or SHOPIFY_STORE_DOMAIN / SHOPIFY_SHOP_NAME / "
+            "SHOPIFY_WM3_STORE_URL. Example: weatherman3.myshopify.com"
         )
     if not os.environ.get("SHOPIFY_STORE_URL", "").strip():
-        alias = (
-            "SHOPIFY_STORE_DOMAIN"
-            if os.environ.get("SHOPIFY_STORE_DOMAIN", "").strip()
-            else "SHOPIFY_SHOP_NAME"
-        )
         log.warning(
-            "SHOPIFY_STORE_URL unset — using %s=%r as store host alias",
-            alias,
+            "SHOPIFY_STORE_URL unset — using alias store host %r",
             store_raw,
         )
         os.environ["SHOPIFY_STORE_URL"] = store_raw
@@ -306,62 +343,70 @@ def get_shopify_access_token(
 ) -> str:
     """Return a Shopify Admin API access token for GraphQL/REST calls.
 
-    Prefer a static ``SHOPIFY_ACCESS_TOKEN`` (``shpat_`` / ``shpa``) when present
-    and skip the Dev Dashboard ``client_credentials`` exchange — many custom apps
-    return HTTP 400 ``application_cannot_be_found`` on ``/admin/oauth/access_token``.
+    Static Admin token candidates (first unused hit wins):
+      ``SHOPIFY_ACCESS_TOKEN``, ``SHOPIFY_WM3_SHPAT``
 
-    When ``prefer_oauth=True`` (e.g. after a GraphQL 401 on a stale shpat), skip the
-    static token and use ``SHOPIFY_CLIENT_ID`` / ``SHOPIFY_CLIENT_SECRET`` instead.
+    OAuth client-credential candidates (tried in order on failure):
+      ``SHOPIFY_CLIENT_ID``/``SHOPIFY_CLIENT_SECRET``,
+      ``SHOPIFY_CUSTOM_APP_CLIENT_ID``/``SHOPIFY_CUSTOM_APP_CLIENT_SECRET``
+
+    Prefer a static ``shpat_`` / ``shpa`` token when present. When
+    ``prefer_oauth=True`` (after GraphQL 401), skip static tokens and try OAuth pairs.
     """
-    client_id = os.environ.get("SHOPIFY_CLIENT_ID", "").strip().strip('"').strip("'")
-    client_secret = os.environ.get("SHOPIFY_CLIENT_SECRET", "").strip().strip('"').strip("'")
-    legacy_token = os.environ.get("SHOPIFY_ACCESS_TOKEN", "").strip().strip('"').strip("'")
-    store_raw = (
-        os.environ.get("SHOPIFY_STORE_URL", "").strip()
-        or os.environ.get("SHOPIFY_STORE_DOMAIN", "").strip()
-        or os.environ.get("SHOPIFY_SHOP_NAME", "").strip()
+    static_candidates = _shopify_static_token_candidates()
+    oauth_pairs = _shopify_oauth_client_pairs()
+    store_raw = _first_env(
+        "SHOPIFY_STORE_URL",
+        "SHOPIFY_STORE_DOMAIN",
+        "SHOPIFY_SHOP_NAME",
+        "SHOPIFY_WM3_STORE_URL",
     )
+    primary_static = static_candidates[0][1] if static_candidates else ""
+    primary_oauth = oauth_pairs[0] if oauth_pairs else ("", "", "")
 
     log.info(
-        "Shopify auth env check: %s | %s | %s | SHOPIFY_STORE_URL=%s prefer_oauth=%s",
-        _mask_secret(client_id, label="SHOPIFY_CLIENT_ID"),
-        _mask_secret(client_secret, label="SHOPIFY_CLIENT_SECRET"),
-        _mask_secret(legacy_token, label="SHOPIFY_ACCESS_TOKEN"),
+        "Shopify auth env check: static_candidates=%s oauth_pairs=%s "
+        "SHOPIFY_STORE_URL=%s prefer_oauth=%s | %s | %s | %s",
+        [name for name, _ in static_candidates],
+        [label for label, _, _ in oauth_pairs],
         store_raw or "MISSING",
         prefer_oauth,
+        _mask_secret(primary_oauth[1], label="SHOPIFY_CLIENT_ID"),
+        _mask_secret(primary_oauth[2], label="SHOPIFY_CLIENT_SECRET"),
+        _mask_secret(primary_static, label="SHOPIFY_ACCESS_TOKEN"),
     )
 
     # 1) Static Admin API token wins — unless caller asked for OAuth after a 401.
-    if (
-        legacy_token
-        and _is_static_shopify_admin_token(legacy_token)
-        and not prefer_oauth
-    ):
-        log.info(
-            "Shopify: using SHOPIFY_ACCESS_TOKEN directly as X-Shopify-Access-Token "
-            "(prefix=%r…, len=%s); skipping client_credentials OAuth exchange",
-            legacy_token[:5],
-            len(legacy_token),
-        )
-        return legacy_token
+    if not prefer_oauth:
+        for env_name, token in static_candidates:
+            if _is_static_shopify_admin_token(token):
+                log.info(
+                    "Shopify: using %s directly as X-Shopify-Access-Token "
+                    "(prefix=%r…, len=%s); skipping client_credentials OAuth exchange",
+                    env_name,
+                    token[:5],
+                    len(token),
+                )
+                return token
 
-    # 2) Dynamic OAuth when no static Admin token is available, or after shpat 401.
-    if client_id and client_secret:
-        now = time.time()
-        cached = _SHOPIFY_TOKEN_CACHE.get("access_token")
-        expires_at = float(_SHOPIFY_TOKEN_CACHE.get("expires_at") or 0)
-        if not force_refresh and cached and now < expires_at - 60:
-            log.info("Shopify OAuth: using cached access_token (expires_in≈%.0fs)", expires_at - now)
-            return str(cached)
+    # 2) Dynamic OAuth — try each client_id/secret pair.
+    now = time.time()
+    cached = _SHOPIFY_TOKEN_CACHE.get("access_token")
+    expires_at = float(_SHOPIFY_TOKEN_CACHE.get("expires_at") or 0)
+    if not force_refresh and cached and now < expires_at - 60:
+        log.info("Shopify OAuth: using cached access_token (expires_in≈%.0fs)", expires_at - now)
+        return str(cached)
 
-        host = _shopify_store_host()
-        token_url = f"https://{host}/admin/oauth/access_token"
+    host = _shopify_store_host()
+    token_url = f"https://{host}/admin/oauth/access_token"
+    oauth_errors: list[str] = []
+    for label, client_id, client_secret in oauth_pairs:
         log.info(
-            "Shopify OAuth: POST %s (grant_type=client_credentials, client_id_len=%s)",
+            "Shopify OAuth: POST %s via %s (grant_type=client_credentials, client_id_len=%s)",
             token_url,
+            label,
             len(client_id),
         )
-
         try:
             response = requests.post(
                 token_url,
@@ -380,79 +425,63 @@ def get_shopify_access_token(
             )
         except requests.RequestException as exc:
             log.exception("Shopify OAuth: network error calling %s", token_url)
-            raise RuntimeError(
-                f"Shopify OAuth network error for {token_url}: {exc}"
-            ) from exc
+            oauth_errors.append(f"{label}: network error {exc}")
+            continue
 
         body_text = (response.text or "").strip()
         log.info(
-            "Shopify OAuth: status=%s content_type=%r body=%s",
+            "Shopify OAuth (%s): status=%s content_type=%r body=%s",
+            label,
             response.status_code,
             response.headers.get("Content-Type"),
             _redact_oauth_body(body_text),
         )
-
         if response.status_code != 200:
-            # Last-resort: non-shpat / unused static token if OAuth app is misconfigured.
-            if legacy_token and prefer_oauth:
-                raise RuntimeError(
-                    f"Shopify OAuth token exchange failed after static-token 401: "
-                    f"POST {token_url} → HTTP {response.status_code} "
-                    f"body={_redact_oauth_body(body_text)}"
-                )
-            if legacy_token:
-                log.warning(
-                    "Shopify OAuth failed HTTP %s; falling back to SHOPIFY_ACCESS_TOKEN "
-                    "(prefix=%r…)",
-                    response.status_code,
-                    legacy_token[:4],
-                )
-                return legacy_token
-            raise RuntimeError(
-                f"Shopify OAuth token exchange failed: POST {token_url} "
-                f"→ HTTP {response.status_code} body={_redact_oauth_body(body_text)}"
+            oauth_errors.append(
+                f"{label}: HTTP {response.status_code} {_redact_oauth_body(body_text)}"
             )
+            continue
 
         try:
             payload = response.json() if response.content else {}
-        except ValueError as exc:
-            raise RuntimeError(
-                f"Shopify OAuth returned non-JSON body from {token_url}: {body_text[:400]}"
-            ) from exc
+        except ValueError:
+            oauth_errors.append(f"{label}: non-JSON body {body_text[:200]}")
+            continue
 
         access_token = str(payload.get("access_token") or "").strip()
         if not access_token:
-            raise RuntimeError(
-                f"Shopify OAuth 200 but missing access_token from {token_url}: "
-                f"{str(payload)[:500]}"
-            )
+            oauth_errors.append(f"{label}: missing access_token")
+            continue
 
         expires_in = int(payload.get("expires_in") or 86399)
         _SHOPIFY_TOKEN_CACHE["access_token"] = access_token
         _SHOPIFY_TOKEN_CACHE["expires_at"] = now + max(60, expires_in)
         log.info(
-            "Shopify OAuth: success token_prefix=%s… expires_in=%ss scope=%r",
+            "Shopify OAuth: success via %s token_prefix=%s… expires_in=%ss scope=%r",
+            label,
             access_token[:6],
             expires_in,
             payload.get("scope"),
         )
         return access_token
 
-    # 3) Any remaining static token (non-standard prefix) when OAuth is unavailable.
-    if legacy_token and not prefer_oauth:
-        log.warning(
-            "Using SHOPIFY_ACCESS_TOKEN (len=%s prefix=%r…) without client_credentials",
-            len(legacy_token),
-            legacy_token[:4],
-        )
-        return legacy_token
+    # 3) Remaining static tokens (including non-standard prefix) when OAuth failed.
+    if not prefer_oauth:
+        for env_name, token in static_candidates:
+            log.warning(
+                "Shopify OAuth unavailable; using %s (len=%s prefix=%r…)",
+                env_name,
+                len(token),
+                token[:4],
+            )
+            return token
 
+    detail = "; ".join(oauth_errors) if oauth_errors else "no OAuth client pairs configured"
     raise RuntimeError(
-        "Missing Shopify credentials: set SHOPIFY_ACCESS_TOKEN (shpat_… preferred), "
-        "or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET for client_credentials OAuth. "
-        f"Env snapshot: {_mask_secret(client_id, label='SHOPIFY_CLIENT_ID')}, "
-        f"{_mask_secret(client_secret, label='SHOPIFY_CLIENT_SECRET')}, "
-        f"SHOPIFY_STORE_URL={store_raw or 'MISSING'}"
+        "Shopify auth failed. Update SHOPIFY_ACCESS_TOKEN / SHOPIFY_WM3_SHPAT "
+        "or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET "
+        "(or SHOPIFY_CUSTOM_APP_CLIENT_ID + SHOPIFY_CUSTOM_APP_CLIENT_SECRET). "
+        f"Store={store_raw or 'MISSING'}. OAuth attempts: {detail}"
     )
 
 
@@ -735,17 +764,41 @@ def _iter_shopify_orders(
         nodes = _fetch_all(endpoint, headers)
     except RuntimeError as exc:
         detail = str(exc)
-        # Stale shpat_/shpa token → retry once with client_credentials OAuth.
+        # Stale shpat_/shpa token → mark failed, try alternate static token, then OAuth.
         if "401" in detail or "Invalid API key" in detail or "unrecognized login" in detail:
+            failed = headers.get("X-Shopify-Access-Token", "")
+            if failed:
+                _SHOPIFY_FAILED_STATIC_TOKENS.add(failed)
             log.warning(
-                "Shopify GraphQL auth failed with static token (%s); "
-                "retrying with client_credentials OAuth",
+                "Shopify GraphQL auth failed with current token (%s); "
+                "retrying with next static token / client_credentials OAuth",
                 detail[:180],
             )
             _SHOPIFY_TOKEN_CACHE["access_token"] = None
             _SHOPIFY_TOKEN_CACHE["expires_at"] = 0.0
-            endpoint, headers = _shopify_endpoint(prefer_oauth=True)
-            nodes = _fetch_all(endpoint, headers)
+            # Prefer next static candidate first (e.g. SHOPIFY_WM3_SHPAT).
+            alt_static = _shopify_static_token_candidates()
+            if alt_static:
+                endpoint, headers = _shopify_endpoint(prefer_oauth=False)
+                try:
+                    nodes = _fetch_all(endpoint, headers)
+                except RuntimeError as exc2:
+                    detail2 = str(exc2)
+                    if "401" in detail2 or "Invalid API key" in detail2:
+                        failed2 = headers.get("X-Shopify-Access-Token", "")
+                        if failed2:
+                            _SHOPIFY_FAILED_STATIC_TOKENS.add(failed2)
+                        log.warning(
+                            "Shopify alternate static token also failed; "
+                            "retrying with client_credentials OAuth"
+                        )
+                        endpoint, headers = _shopify_endpoint(prefer_oauth=True)
+                        nodes = _fetch_all(endpoint, headers)
+                    else:
+                        raise
+            else:
+                endpoint, headers = _shopify_endpoint(prefer_oauth=True)
+                nodes = _fetch_all(endpoint, headers)
         else:
             raise
 
