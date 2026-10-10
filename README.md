@@ -188,6 +188,65 @@ python main.py --backfill --force --no-seed-baseline --skip-email
 │   └── shopify_ad_spend.json       # Optional dated Shopify ad spend
 ├── scripts/
 │   ├── fetch_walmart_sales.py
-│   └── backfill_archive.py
+│   ├── backfill_archive.py
+│   ├── monthly_deck_sources.py     # Live Shopify / Sellerboard / TW loaders
+│   ├── update_monthly_deck.py      # Monthly Business Review PPTX + Slides plan
+│   └── render_monthly_deck_charts.py  # Line-bar / table / OOS PNGs for Slides
+├── output/monthly_decks/           # Generated dated MBR decks + charts/ (local)
 └── .github/workflows/daily_report.yml
+```
+
+---
+
+## Monthly Business Review deck
+
+Creative deck (October 2026): [`1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA`](https://docs.google.com/presentation/d/1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA/).
+
+`scripts/update_monthly_deck.py` (+ `scripts/monthly_deck_sources.py`) builds a dated PowerPoint **and** a Google Slides update plan that overwrites live metric cards/tables on the creative deck. Chart PNGs are rendered separately by `scripts/render_monthly_deck_charts.py` and inserted with Drive MCP / Slides API (`insertSlidesLocalImage`).
+
+| Source | What it supplies |
+|---|---|
+| Shopify Admin API (MCP / client credentials) | Live D2C revenue, orders, AOV for the target month |
+| Sellerboard daily CSV or `data/sellerboard_daily_cache.json` | Amazon revenue, Real ACOS → ROAS / TACOS |
+| `data/daily_archive.json` | Retailer channels + YTD monthly series + MoM baselines (no 2025 days) |
+| Sunny IP Tracker sheet | SKU velocity, stock / OOS |
+| `data/monthly_ad_metrics.json` / `shopify_ad_spend.json` (optional) | CAC / MER / CVR when ad feeds are available |
+| Triple Whale API (`TRIPLE_WHALE_API_KEY`) or `data/triple_whale_export.json` | PTP (14), Channel Mix (15), Site Health sessions/bounce, **YoY MTD vs Oct 1–10 2025** |
+| `data/ptp_targets.json` (optional) | Planned PTP figures; else prior-month Triple Whale actuals |
+
+### Metric conventions (Oct 2026 QA)
+
+| Metric | Rule |
+|---|---|
+| **MER** | Ads ÷ revenue × 100 (not ROAS× or P&L) |
+| **YoY (slides 4 / 6 / 9)** | Triple Whale Summary for **same MTD window** last year (e.g. Oct 1–10 2025 vs Oct 2026 MTD). `daily_archive` has no 2025 days — do not leave “archive pending” when TW is available |
+| **Amazon CVR / repeat purchase** | Not in Sellerboard daily export → show `—` (blank is intentional) |
+| **Top landing pages (slide 7)** | Per-page paid landing SQL is not stable on TW API; clear stale September sessions and note pending until UI export is wired |
+| **Headers** | Arial bold ~20–22 pt on section titles; WXM All-Channels total **48 pt** |
+| **Charts 12–13** | Line-bar combo (channel bars + all-channel line), not ASCII overlays |
+| **Slide 22** | Blue navy table header (not maroon) |
+| **Slide 24** | Color-coded OOS cards (`oos_pretty.png`) |
+| **Slides 19–23** | Do not re-inject duplicate title text boxes over table graphics |
+
+Slides **3–24** are populated. Slides **25**, **27**, and **32+** are never modified.
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python scripts/update_monthly_deck.py --month 2026-10 \
+  --presentation-id 1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA
+# → output/monthly_decks/Weatherman — October 2026 Monthly Business Review.pptx
+# → output/monthly_decks/slides_plan_2026-10.json
+
+# Chart PNGs for slides 12–13, 22, 24:
+python scripts/render_monthly_deck_charts.py --month 2026-10
+# → output/monthly_decks/charts/ytd_linebar_*.png, table_retailers_blue.png, oos_pretty.png
+```
+
+Apply the Slides plan with a service account (or Drive MCP for image inserts):
+
+```bash
+python scripts/update_monthly_deck.py --month 2026-10 \
+  --presentation-id 1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA \
+  --apply-slides --google-credentials /path/to/sa.json
 ```

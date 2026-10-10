@@ -1,0 +1,10 @@
+{
+  "_comment": "Optional PTP planned figures for Monthly Business Review slide 14. If a month key is missing or plan_source is prior_month_triple_whale, the script uses prior-month Triple Whale actuals so Δ = MoM. Amounts are USD.",
+  "default": {
+    "plan_source": "prior_month_triple_whale"
+  },
+  "2026-10": {
+    "plan_source": "prior_month_triple_whale",
+    "_note": "October MTD compares against September TW actuals (MoM), not the creative-deck annual PTP shell."
+  }
+}

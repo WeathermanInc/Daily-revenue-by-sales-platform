@@ -10,3 +10,11 @@ __pycache__/
 
 # Nested full-app checkout (tracked separately on mg22mex)
 Daily-revenue-by-sales-platform/
+
+output/
+data/templates/*.csv
+
+data/triple_whale_cache/
+data/sellerboard_daily_cache.json
+data/shopify_month_cache.json
+data/triple_whale_export.json
