@@ -4,7 +4,9 @@
 Outputs land in ``output/monthly_decks/charts/`` and are inserted into the
 creative deck via Drive MCP ``insertSlidesLocalImage`` (or Slides API):
 
-* Slides 12–13 — YTD **line-bar** (channel bars + all-channel line)
+* Slides 12–13 — YTD **line-bar** (channel bars + all-channel line).
+  Insert **below** the slide title (~y ≥ 1.6M EMU) so titles stay visible.
+* Slide 15 — Channel Mix titled % share chart (`channel_mix_titled.png`)
 * Slide 22 — retailers metrics table (blue header)
 * Slide 24 — potential OOS SKU cards
 

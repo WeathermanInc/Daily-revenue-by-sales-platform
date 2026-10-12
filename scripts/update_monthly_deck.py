@@ -16,8 +16,12 @@ D. Triple Whale API (``TRIPLE_WHALE_API_KEY``) or ``data/triple_whale_export.jso
    because ``daily_archive`` has no 2025 days. Optional planned PTP:
    ``data/ptp_targets.json`` (else prior-month TW).
 E. Chart PNGs from ``scripts/render_monthly_deck_charts.py`` (line-bar YTD,
-   blue retailers table, OOS cards) — insert via MCP/API, not ASCII overlays.
-   MER = ads÷revenue %. Amazon CVR/RPR stay blank when absent from Sellerboard.
+   Channel Mix titled share, blue retailers table, OOS cards) — insert via
+   MCP/API **below** titles (do not cover headers). Delete empty layout
+   placeholders on slides 19–24 (empty boxes still show “Click to add…”).
+   MER = ads÷revenue %. Amazon MoM priors come from the prior-month MBR;
+   YoY ads priors use last closed Sellerboard YoY pack until year-ago export
+   exists. B2B slide 29 bottom row = Oct MTD vs Sep (``B2B 2026`` sheet).
 
 Outputs
 -------

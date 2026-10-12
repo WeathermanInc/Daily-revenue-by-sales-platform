@@ -223,10 +223,15 @@ Creative deck (October 2026): [`1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA`](h
 | **Amazon CVR / repeat purchase** | Not in Sellerboard daily export → show `—` (blank is intentional) |
 | **Top landing pages (slide 7)** | Per-page paid landing SQL is not stable on TW API; clear stale September sessions and note pending until UI export is wired |
 | **Headers** | Arial bold ~20–22 pt on section titles; WXM All-Channels total **48 pt** |
-| **Charts 12–13** | Line-bar combo (channel bars + all-channel line), not ASCII overlays |
+| **Amazon MoM priors (slide 8)** | Pull Sep ROAS/CVR/ACOS/TACOS/RPR/net from the closed September MBR (not blanks) |
+| **Amazon YoY ads priors (slide 9)** | Until Oct 2025 Sellerboard export exists, use Sept 2025 Sellerboard pack; label source in Risks |
+| **Retailer revenue cards** | Primary $ value ~36 pt; MoM % stays compact (~12 pt) |
+| **Charts 12–13** | Line-bar combo; **insert below the title** (leave ~1.6–1.8M EMU top clearance so titles stay visible) |
+| **Slide 15 Channel Mix** | Match September layout: titled “Channel Mix: Revenue”, % share bars, Sep vs Oct MTD dollar totals |
 | **Slide 22** | Blue navy table header (not maroon) |
 | **Slide 24** | Color-coded OOS cards (`oos_pretty.png`) |
-| **Slides 19–23** | Do not re-inject duplicate title text boxes over table graphics |
+| **Slides 19–24** | **Delete** layout “Click to add title/text” placeholders (empty text still shows the hint) |
+| **B2B Sales (slide 29)** | Bottom cards = **Oct MTD vs Sep 2026** (units + revenue from `B2B 2026` sheet); fix arrow colors to match sign |
 
 Slides **3–24** are populated. Slides **25**, **27**, and **32+** are never modified.
 
