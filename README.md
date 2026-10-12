@@ -225,7 +225,8 @@ Creative deck (October 2026): [`1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA`](h
 | **Headers** | Arial bold ~20–22 pt on section titles; WXM All-Channels total **48 pt** |
 | **Amazon MoM priors (slide 8)** | Full prior $ like September (not compact `$405.7K`); priors = plain dark text; **only** %/pts deltas sit in colored pills |
 | **Amazon YoY ads priors (slide 9)** | Until Oct 2025 Sellerboard export exists, use Sept 2025 Sellerboard pack; fill CVR/RPR current + pts pills; label source in Risks |
-| **Retailer revenue cards** | September style: `Revenue\\n$…\\n     ±x% MoM` (indented soft MoM, no red highlight fill) |
+| **Retailer revenue cards** | September style: `Revenue\\n$…\\n     ±x% MoM`; **DSG and Nordstrom share the same font sizes** (label ~14pt, primary ~36pt, MoM ~14pt, black); no pink highlight on DSG revenue |
+| **Slide 16 title** | Do **not** keep “New vs Returning + LTV Signals” — chart title is enough (avoids overlap) |
 | **Charts 12–13** | Line-bar combo; **insert below the title** (leave ~1.6–1.8M EMU top clearance so titles stay visible) |
 | **Slide 15 Channel Mix** | Granular buckets: Email, SMS, Direct, Paid Search, Paid Social, Affiliates, Organic Social, Organic Search, Referral, Unassigned + MoM mix-shift panel (`channel_mix_granular.png`) |
 | **Slide 16 New vs Returning** | Legend at **bottom**; New (light) on top of stack, Returning (dark) on bottom |

@@ -1723,6 +1723,8 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
     # Retailers — update creative cards in-place (no mid-slide table overlay).
     _add_text(plan, 10, "h1872ece28e3fae88_13_423", "DSG")
     # Match September retailers revenue card style: label, $, indented MoM %.
+    # After apply, format DSG + Nordstrom value lines to the same sizes (label ~14pt,
+    # primary ~36pt, MoM ~14pt) and clear any pink fill on 13_435.
     dsg_mom = pct_change(dsg.revenue, dsg_p.revenue) or "—"
     dsg_mom_soft = dsg_mom.replace("▲ ", "+").replace("▼ ", "-")
     _add_text(
@@ -1899,6 +1901,10 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
         f"Orders: Amazon {amz.orders:,} · Shopify {shop.orders:,}. "
         "Increase repeat purchase via post-purchase, win-back, and replenishment flows.",
     )
+    # Chart PNG already titles "New vs Returning Customers" — drop the overlapping
+    # slide header + peach accent (safe if already removed).
+    _add_delete(plan, 16, "g3f8cdd12cc6_132_1733")
+    _add_delete(plan, 16, "g3f8cdd12cc6_132_1729")
 
     # --- Slides 17–24 inventory ---
     inv = data.inventory_summary
@@ -2215,9 +2221,15 @@ def apply_slides_plan_api(
         requests.append(body)
         print(f"replaceAllText [{op.slides}]: {op.contains!r} → {op.replace!r}")
 
-    # 2) Deletes
+    # 2) Deletes (one-at-a-time so a missing objectId does not fail the batch)
     for d in plan.deletes:
-        requests.append({"deleteObject": {"objectId": d.object_id}})
+        try:
+            slides.presentations().batchUpdate(
+                presentationId=plan.presentation_id,
+                body={"requests": [{"deleteObject": {"objectId": d.object_id}}]},
+            ).execute()
+        except Exception as exc:  # noqa: BLE001 — object may already be gone
+            log.warning("Skip delete %s (slide %s): %s", d.object_id, d.slide, exc)
 
     # 3) Explicit text frames (titles + discovered card value objectIds)
     for t in plan.text_updates:
