@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WEATHERMAN · Daily Revenue Dashboard · October 11, 2026</title>
+  <style>
+    :root {
+      --navy: #0B192C;
+      --bg: #F3F5F7;
+      --card: #ffffff;
+      --text: #1F2937;
+      --muted: #6B7280;
+      --blue: #3F51B5;
+      --teal: #0F766E;
+      --teal-mid: #14919B;
+      --green: #2E7D32;
+      --border: #E5E7EB;
+      --accent-bar: #5C6BC0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header {
+      background: var(--navy);
+      color: #fff;
+      padding: 22px 28px 20px;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      opacity: 0.95;
+    }
+    .header h1 {
+      margin: 8px 0 6px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .header .sub {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+    .wrap {
+      padding: 20px 24px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .section-label {
+      margin: 18px 0 10px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .period-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .period-card {
+      border-radius: 10px;
+      padding: 18px 16px;
+      color: #fff;
+      min-height: 110px;
+    }
+    .period-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    .period-value {
+      margin-top: 10px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .period-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .ad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent-bar);
+      border-radius: 10px;
+      padding: 14px 14px 16px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    .metric-label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .metric-value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a237e;
+    }
+    .metric-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .tables {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 14px;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    .panel h3 {
+      margin: 0;
+      padding: 12px 14px;
+      font-size: 13px;
+      background: #EEF2F7;
+      border-bottom: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #F8FAFC;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    td.num, th.num { text-align: right; white-space: nowrap; }
+    td.empty { color: var(--muted); text-align: center; padding: 18px; }
+    .sku-panel { margin-top: 8px; }
+    @media (max-width: 1100px) {
+      .period-grid, .platform-grid, .ad-grid, .tables {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 700px) {
+      .period-grid, .platform-grid, .ad-grid, .tables {
+        grid-template-columns: 1fr;
+      }
+      .wrap { padding: 14px; }
+      .header { padding-left: 14px; padding-right: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">WEATHERMAN</div>
+    <h1>Daily Revenue Dashboard</h1>
+    <div class="sub">Amazon + Shopify Direct + DICK&#x27;S SPORTING GOODS + NORDSTROM + Walmart · Gross Revenue · ET calendar day 00:00–23:59:59 · October 11, 2026</div>
+  </header>
+
+  <main class="wrap">
+    <div class="period-grid">
+      
+            <div class="period-card" style="background:#3F51B5;">
+              <div class="period-label">Yesterday</div>
+              <div class="period-value">$49,868.51</div>
+              <div class="period-sub">815 units</div>
+            </div>
+            
+            <div class="period-card" style="background:#0F766E;">
+              <div class="period-label">Month to Date</div>
+              <div class="period-value">$297,048.41</div>
+              <div class="period-sub">4877 units · Walmart Oct 2–11 coverage</div>
+            </div>
+            
+            <div class="period-card" style="background:#14919B;">
+              <div class="period-label">This Month Forecast</div>
+              <div class="period-value">$837,136.43</div>
+              <div class="period-sub">11 of 31 days complete</div>
+            </div>
+            
+            <div class="period-card" style="background:#2E7D32;">
+              <div class="period-label">Last Month</div>
+              <div class="period-value">$537,909.30</div>
+              <div class="period-sub">8,362 units · validated Sep archive</div>
+            </div>
+            
+    </div>
+
+    <div class="section-label">Sales platform performance · Gross Revenue</div>
+    <div class="platform-grid">
+      
+            <div class="metric-card">
+              <div class="metric-label">Amazon · GROSS REVENUE</div>
+              <div class="metric-value">$36,851.78</div>
+              <div class="metric-sub">580 units · Real ACOS 20.11%</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">Shopify Direct · GROSS REVENUE</div>
+              <div class="metric-value">$9,689.83</div>
+              <div class="metric-sub">183 units · 81 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">DICK&#x27;S SPORTING GOODS · GROSS REVENUE</div>
+              <div class="metric-value">$189.00</div>
+              <div class="metric-sub">5 units · 1 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">NORDSTROM · GROSS REVENUE</div>
+              <div class="metric-value">$3,062.90</div>
+              <div class="metric-sub">46 units · 38 orders</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="metric-label">Walmart · GROSS REVENUE</div>
+              <div class="metric-value">$75.00</div>
+              <div class="metric-sub">1 units · 1 orders · Exact-date relay</div>
+            </div>
+            
+    </div>
+
+    <div class="section-label">Ad metrics &amp; reconciliation</div>
+    <div class="ad-grid">
+      
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY BLENDED COST OF SALES</div>
+        <div class="metric-value">13.23%</div>
+        <div class="metric-sub">Ad spend ÷ Shopify order revenue · lower is better</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY REVENUE PER AD DOLLAR</div>
+        <div class="metric-value">7.56x</div>
+        <div class="metric-sub">Shopify order revenue ÷ ad spend · higher is better</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY AD SPEND</div>
+        <div class="metric-value">$1,712.27</div>
+        <div class="metric-sub">Amazon excluded</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">SHOPIFY RECONCILIATION</div>
+        <div class="metric-value">$0.00</div>
+        <div class="metric-sub">Direct + DSG + Nordstrom variance · 0 units</div>
+      </div>
+    
+    </div>
+
+    <div class="section-label">Category unit performance</div>
+    <div class="tables">
+      <div class="panel">
+        <h3>All-platform category unit totals</h3>
+        <table>
+          <thead><tr><th>Category</th><th class="num">Total</th></tr></thead>
+          <tbody>
+            <tr><td>Total umbrellas sold</td><td class='num'>593</td></tr><tr><td>Backpack</td><td class='num'>3</td></tr><tr><td>Poncho</td><td class='num'>27</td></tr><tr><td>Hat</td><td class='num'>2</td></tr><tr><td>Shirts</td><td class='num'>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Category units by platform</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amazon</th><th>Shopify Direct</th><th>DSG</th><th>Nordstrom</th><th>Walmart</th>
+              <th class="num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Total umbrellas sold</td><td class='num'>431</td><td class='num'>116</td><td class='num'>5</td><td class='num'>40</td><td class='num'>1</td><td class='num'>593</td></tr><tr><td>Backpack</td><td class='num'>1</td><td class='num'>1</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>3</td></tr><tr><td>Poncho</td><td class='num'>8</td><td class='num'>16</td><td class='num'>0</td><td class='num'>3</td><td class='num'>0</td><td class='num'>27</td></tr><tr><td>Hat</td><td class='num'>0</td><td class='num'>2</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>2</td></tr><tr><td>Shirts</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label">New product introductions · units &amp; revenue by channel</div>
+    <div class="panel sku-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Amazon</th><th>Shopify Direct</th><th>DSG</th><th>Nordstrom</th><th>Walmart</th>
+            <th class="num">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Travel Umbrella – Skyline Stripe</td><td class='num'>5<div class='metric-sub' style='margin-top:2px'>$275.95</div></td><td class='num'>8<div class='metric-sub' style='margin-top:2px'>$441.52</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>13<div class='metric-sub' style='margin-top:2px'>$717.47</div></td></tr><tr><td>Travel Umbrella – Dusty Lavender</td><td class='num'>12<div class='metric-sub' style='margin-top:2px'>$662.28</div></td><td class='num'>2<div class='metric-sub' style='margin-top:2px'>$110.38</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>14<div class='metric-sub' style='margin-top:2px'>$772.66</div></td></tr><tr><td>Trek Umbrella – Rusty Orange</td><td class='num'>18<div class='metric-sub' style='margin-top:2px'>$1,143.15</div></td><td class='num'>9<div class='metric-sub' style='margin-top:2px'>$533.17</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>6<div class='metric-sub' style='margin-top:2px'>$384.80</div></td><td class='num'>0<div class='metric-sub' style='margin-top:2px'>$0.00</div></td><td class='num'>33<div class='metric-sub' style='margin-top:2px'>$2,061.12</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">SKU drilldown · five channels</div>
+    <div class="panel sku-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>SKU</th>
+            <th>Item</th>
+            <th class="num">Units</th>
+            <th class="num">Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Amazon</td><td>FBA2-12005-600-221-51</td><td>Weatherman Premium Trek Windproof Umbrella (Navy Blue)</td><td class='num'>53</td><td class='num'>$3,255.48</td></tr><tr><td>Amazon</td><td>FBA-10001-001-00001</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Black)</td><td class='num'>42</td><td class='num'>$2,980.35</td></tr><tr><td>Amazon</td><td>FBA2-11005-600-221-55</td><td>Weatherman Long Stick Windproof Large Umbrellas for Rain (Navy Blue)</td><td class='num'>32</td><td class='num'>$2,148.75</td></tr><tr><td>Amazon</td><td>FBA_12005-310-00003</td><td>Weatherman Premium Trek Windproof Umbrella (Sage)</td><td class='num'>29</td><td class='num'>$1,949.90</td></tr><tr><td>Amazon</td><td>FBA-11005-001-221-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Black)</td><td class='num'>23</td><td class='num'>$1,580.15</td></tr><tr><td>Amazon</td><td>FBA-10001-600-00003</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Navy Blue)</td><td class='num'>21</td><td class='num'>$1,448.79</td></tr><tr><td>Amazon</td><td>FBA_11005-310-00002</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Sage)</td><td class='num'>20</td><td class='num'>$1,343.00</td></tr><tr><td>Amazon</td><td>FBA3-12005-001-221-51</td><td>Weatherman Premium Trek Windproof Umbrella (Black)</td><td class='num'>17</td><td class='num'>$1,274.83</td></tr><tr><td>Amazon</td><td>WM-12005-801-O/S</td><td>Weatherman Premium Trek Windproof Umbrella (Rusty Orange)</td><td class='num'>18</td><td class='num'>$1,143.15</td></tr><tr><td>Amazon</td><td>FBA-12005-200-221-51</td><td>Weatherman Premium Trek Windproof Umbrella (Red)</td><td class='num'>16</td><td class='num'>$947.20</td></tr><tr><td>Amazon</td><td>FBA-14M00-001-00001</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (Black)</td><td class='num'>13</td><td class='num'>$934.57</td></tr><tr><td>Amazon</td><td>FBA_12005-100-00004</td><td>Weatherman Premium Trek Windproof Umbrella (White)</td><td class='num'>13</td><td class='num'>$699.08</td></tr><tr><td>Amazon</td><td>WM-10001-511-O/S</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Dusty Lavender)</td><td class='num'>12</td><td class='num'>$662.28</td></tr><tr><td>Amazon</td><td>FBA 10001-310-00007</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Sage)</td><td class='num'>8</td><td class='num'>$551.92</td></tr><tr><td>Amazon</td><td>FBA-14M00-600-00003</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (Navy Blue)</td><td class='num'>7</td><td class='num'>$505.33</td></tr><tr><td>Amazon</td><td>12006-VGA-00021 - FBA</td><td>Weatherman Premium Trek Windproof Umbrella (TrueTimber Viper Camo - VGA)</td><td class='num'>8</td><td class='num'>$492.80</td></tr><tr><td>Amazon</td><td>FBA-10001-100-00002</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (White)</td><td class='num'>7</td><td class='num'>$482.93</td></tr><tr><td>Amazon</td><td>FBA-14M00-100-00004</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (White)</td><td class='num'>6</td><td class='num'>$432.00</td></tr><tr><td>Amazon</td><td>14M00-200-00011</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (Red)</td><td class='num'>6</td><td class='num'>$422.34</td></tr><tr><td>Amazon</td><td>FBA-11004-200-219-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Red)</td><td class='num'>5</td><td class='num'>$336.00</td></tr><tr><td>Amazon</td><td>FBA_11005-100-00004</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (White)</td><td class='num'>5</td><td class='num'>$335.75</td></tr><tr><td>Amazon</td><td>14M00-790-00012</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (Neon Yellow)</td><td class='num'>4</td><td class='num'>$288.00</td></tr><tr><td>Amazon</td><td>WM-23001-410-M/L</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – M/L – (Navy)</td><td class='num'>2</td><td class='num'>$281.02</td></tr><tr><td>Amazon</td><td>FBA-10000-200-419-44</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Red)</td><td class='num'>5</td><td class='num'>$275.95</td></tr><tr><td>Amazon</td><td>FBA-10001-790-321-44</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Neon Yellow)</td><td class='num'>5</td><td class='num'>$275.95</td></tr><tr><td>Amazon</td><td>WM-10001-000-O/S</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Skyline Stripe)</td><td class='num'>5</td><td class='num'>$275.95</td></tr><tr><td>Amazon</td><td>WM-23001-920-XL/2XL</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – XL/2XL – (Bone)</td><td class='num'>2</td><td class='num'>$270.40</td></tr><tr><td>Amazon</td><td>14M06-VGA-00009 - FBA</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (TrueTimber Viper Camo - VGA)</td><td class='num'>3</td><td class='num'>$215.67</td></tr><tr><td>Amazon</td><td>FBA-1K001-DT1-00001</td><td>Weatherman Umbrella for Kids Daniel Tiger – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach</td><td class='num'>6</td><td class='num'>$199.20</td></tr><tr><td>Amazon</td><td>1K000-200-00012</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach Red</td><td class='num'>6</td><td class='num'>$173.34</td></tr><tr><td>NORDSTROM</td><td>WM-23001-920-XS/S</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$169.00</td></tr><tr><td>Amazon</td><td>10000-200-419-44</td><td>Weatherman Premium Small Compact Mini Umbrella for Travel (Red)</td><td class='num'>3</td><td class='num'>$165.57</td></tr><tr><td>Amazon</td><td>FBA-14M00-AA1-00006</td><td>Weatherman Golf Umbrella Extra Large Big Oversize (Arnie’s Army)</td><td class='num'>2</td><td class='num'>$159.58</td></tr><tr><td>Amazon</td><td>1K001-GRD-00011</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Gradient)</td><td class='num'>5</td><td class='num'>$158.95</td></tr><tr><td>Amazon</td><td>WM-1K001-000-O/S</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Colorstorm)</td><td class='num'>5</td><td class='num'>$144.50</td></tr><tr><td>Amazon</td><td>WM-23001-201-M/L</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – M/L – (Chocolate)</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Amazon</td><td>WM-23001-410-XL/2XL</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – XL/2XL – (Navy)</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Amazon</td><td>WM-23001-920-M/L</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – M/L – (Bone)</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Amazon</td><td>WM-23001-920-XS/S</td><td>Weatherman Stride Pullover Rain Poncho for Adults – Heavy Duty Waterproof Ponchos for Hiking, Camping &amp; Outdoor Travel – Breathable Windproof Packable Rain Gear for Men &amp; Women – XS/S – (Bone)</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-201-M/L</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-310-M/L</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-310-XS/S</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-M/L</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-M/L</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XL/2XL</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-410-XS/S</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-920-M/L</td><td>Men&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-920-XS/S</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-920-XS/S</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>WM-23001-920-XS/S</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$135.20</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>2</td><td class='num'>$134.40</td></tr><tr><td>Amazon</td><td>WM-40002-001 - FBA</td><td>Weatherman Venture Dry Pack - Waterproof Hiking Bag &amp; Travel Backpack - Dry Backpack with Umbrella Compartment, Laptop Sleeve and Smart Storage - Durable Water-Resistant Outdoor Gear - (Black)</td><td class='num'>1</td><td class='num'>$127.20</td></tr><tr><td>NORDSTROM</td><td>WM-40002-001</td><td>Venture Dry Pack</td><td class='num'>1</td><td class='num'>$127.20</td></tr><tr><td>Shopify Direct</td><td>WM-40002-001</td><td>Venture Dry Pack</td><td class='num'>1</td><td class='num'>$127.20</td></tr><tr><td>Amazon</td><td>FBA-12005-AP1-221-51</td><td>Weatherman Arnold Palmer Compact Trek Umbrella (Classic)</td><td class='num'>2</td><td class='num'>$126.40</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>2</td><td class='num'>$118.40</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>2</td><td class='num'>$118.40</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>2</td><td class='num'>$118.40</td></tr><tr><td>Amazon</td><td>FBA - WM-71001-410-L</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - L - (Navy)</td><td class='num'>3</td><td class='num'>$104.37</td></tr><tr><td>NORDSTROM</td><td>WM-23001-410-XL/2XL</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$99.00</td></tr><tr><td>NORDSTROM</td><td>WM-23001-920-M/L</td><td>Women&#x27;s Stride Pullover Poncho</td><td class='num'>1</td><td class='num'>$99.00</td></tr><tr><td>NORDSTROM</td><td>14M00-600-00003</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$90.00</td></tr><tr><td>Amazon</td><td>1K00-310-00019-FBA</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Sage)</td><td class='num'>3</td><td class='num'>$89.73</td></tr><tr><td>Amazon</td><td>11005-001-221-55</td><td>Weatherman Premium Long Stick Windproof Large Umbrellas for Rain (Black)</td><td class='num'>1</td><td class='num'>$85.00</td></tr><tr><td>Amazon</td><td>1K000-732-00013</td><td>Weatherman Umbrella - kids Umbrella - Windproof kid Umbrellas Resists Up to 55 MPH Winds - Kid Umbrellas Girls Boys Toddlers Child - Soft Edges, Pinch-Proof, Comfortable Grip Design (Rusty Orange)</td><td class='num'>4</td><td class='num'>$84.15</td></tr><tr><td>Amazon</td><td>FBA-11004-001-219-55</td><td>Weatherman Umbrella - Premium Long Stick Umbrella for Travel, Outdoor Use, City Walking - Windproof Big Large Umbrellas for 2 People - Huge Extra Large Umbrellas for Rain, Wind, Car - Full Size Auto Open Sleek Stick Umbrellas for Rain - Resists Up to 88 KPH Winds (Black)</td><td class='num'>1</td><td class='num'>$81.18</td></tr><tr><td>Amazon</td><td>14M01-AP2-00010</td><td>Weatherman Umbrella - Golf Lite Umbrella Extra Large Windproof for Golf Bag Push Cart w/UV Protection - Waterproof Heavy Duty Umbrellas for Men Women - Resists Up to 55 MPH Winds (Mint Lemonade)</td><td class='num'>1</td><td class='num'>$80.00</td></tr><tr><td>Amazon</td><td>FBA-14M01-AP1-00008</td><td>Weatherman Umbrella - Arnold Palmer Large Golf Lite Umbrella for Men, Women - Lightweight &amp; Windproof Sports Resists Up to 55 MPH Winds - Protection Wind, Rain Sun (Classic, 66 inch)</td><td class='num'>1</td><td class='num'>$79.99</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$79.42</td></tr><tr><td>Amazon</td><td>12005-310-00003</td><td>Weatherman Premium Trek Windproof Umbrella (Sage)</td><td class='num'>1</td><td class='num'>$75.00</td></tr><tr><td>Walmart</td><td>FBM-12005-310-00003</td><td>Weatherman Collapsible Travel Umbrella Auto Open Fiberglass (Sage)</td><td class='num'>1</td><td class='num'>$75.00</td></tr><tr><td>Amazon</td><td>FBA-12005-135-00017</td><td>Weatherman Premium Trek Windproof Umbrella (Steel Blue)</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>NORDSTROM</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>NORDSTROM</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$74.00</td></tr><tr><td>NORDSTROM</td><td>14M00-600-00003</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-100-00004</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-600-00003</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M06-NVGA-00009</td><td>Golf Umbrella – TrueTimber Viper Camo</td><td class='num'>1</td><td class='num'>$72.00</td></tr><tr><td>Shopify Direct</td><td>14M00-200-00011</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$70.39</td></tr><tr><td>Amazon</td><td>WM-71001-310-L</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - L - (Sage)</td><td class='num'>2</td><td class='num'>$69.58</td></tr><tr><td>Amazon</td><td>WM-71001-310-M</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - M - (Sage)</td><td class='num'>2</td><td class='num'>$69.58</td></tr><tr><td>Amazon</td><td>WM-71001-920-M</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - M - (Bone)</td><td class='num'>2</td><td class='num'>$69.58</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>2</td><td class='num'>$69.00</td></tr><tr><td>NORDSTROM</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-310-00002</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>NORDSTROM</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-001-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-100-00004</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-100-00004</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-200-219-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-200-219-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-310-00002</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-310-00002</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-310-00002</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-310-00002</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Shopify Direct</td><td>11005-600-221-55</td><td>Walk Umbrella</td><td class='num'>1</td><td class='num'>$67.20</td></tr><tr><td>Amazon</td><td>11005-201-00016-FBA</td><td>Weatherman Long Stick Windproof Large Umbrellas for Rain (Shaved Chocolate)</td><td class='num'>1</td><td class='num'>$66.40</td></tr><tr><td>Amazon</td><td>1K001-900-00017</td><td>Weatherman - Folds of Honor - Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach - Perfect for Celebrations (FOH Blue 2025)</td><td class='num'>2</td><td class='num'>$64.60</td></tr><tr><td>NORDSTROM</td><td>12005-AP1-221-51</td><td>Arnold Palmer Trek Umbrella - Classic</td><td class='num'>1</td><td class='num'>$63.20</td></tr><tr><td>Shopify Direct</td><td>12005-AP1-221-51</td><td>Arnold Palmer Trek Umbrella - Classic</td><td class='num'>1</td><td class='num'>$63.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.57</td></tr><tr><td>NORDSTROM</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-100-00004</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-100-00004</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-200-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>NORDSTROM</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-001-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-100-00004</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-200-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-200-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-310-00003</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>12005-600-221-51</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Shopify Direct</td><td>WM-12005-801-O/S</td><td>Trek Umbrella</td><td class='num'>1</td><td class='num'>$59.20</td></tr><tr><td>Amazon</td><td>FBA-1K000-790-00005</td><td>Weatherman Kids Umbrella – Lightweight Umbrella for Girls Boys Toddlers – Soft Edges, Pinch-Proof, Comfortable Grip, Travel-Friendly for School Park Beach (Neon Yellow)</td><td class='num'>2</td><td class='num'>$57.80</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-100-00002</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>NORDSTROM</td><td>10001-790-00005</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10000-200-419-44</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10000-200-419-44</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-001-00001</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-310-00007</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-600-00003</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-790-00005</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-790-00005</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-790-00005</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>10001-790-00005</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-000-O/S</td><td>Travel Umbrella – Skyline Stripe</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-511-O/S</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-10001-511-O/S</td><td>Travel Umbrella</td><td class='num'>1</td><td class='num'>$55.19</td></tr><tr><td>Shopify Direct</td><td>WM-12006-464-O/S</td><td>Folds of Honor Trek Umbrella – America250</td><td class='num'>1</td><td class='num'>$51.80</td></tr><tr><td>Shopify Direct</td><td>WM-71001-310-M</td><td>Trail Hound Rain Vest</td><td class='num'>1</td><td class='num'>$49.00</td></tr><tr><td>Shopify Direct</td><td>WM-40001-202-M/L</td><td>Trek All-Weather Hat</td><td class='num'>1</td><td class='num'>$47.20</td></tr><tr><td>Shopify Direct</td><td>WM-40001-411-XL/2XL</td><td>Trek All-Weather Hat</td><td class='num'>1</td><td class='num'>$47.20</td></tr><tr><td>Shopify Direct</td><td>14M00-100-00004-OLD</td><td>Archived Golf Umbrella</td><td class='num'>1</td><td class='num'>$45.00</td></tr><tr><td>Shopify Direct</td><td>11005-100-00004-OLD</td><td>Archived Stick Umbrella</td><td class='num'>1</td><td class='num'>$42.00</td></tr><tr><td>Shopify Direct</td><td>11005-100-00004-OLD</td><td>Archived Stick Umbrella</td><td class='num'>1</td><td class='num'>$42.00</td></tr><tr><td>NORDSTROM</td><td>WM-71001-310-M</td><td>Trail Hound Rain Vest</td><td class='num'>1</td><td class='num'>$39.00</td></tr><tr><td>NORDSTROM</td><td>WM-71001-920-S</td><td>Trail Hound Rain Vest</td><td class='num'>1</td><td class='num'>$39.00</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>14M00-001-00001</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$37.80</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>14M00-200-00011</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$37.80</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>14M00-200-00011</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$37.80</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>14M00-600-00003</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$37.80</td></tr><tr><td>DICK&#x27;S SPORTING GOODS</td><td>14M00-600-00003</td><td>Golf Umbrella</td><td class='num'>1</td><td class='num'>$37.80</td></tr><tr><td>Amazon</td><td>WM-71001-310-XL</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - XL - (Sage)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Amazon</td><td>WM-71001-410-2XL</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - 2XL - (Navy)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Amazon</td><td>WM-71001-410-M</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - M - (Navy)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Amazon</td><td>WM-71001-410-S</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - S - (Navy)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Amazon</td><td>WM-71001-920-2XL</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - 2XL - (Bone)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Amazon</td><td>WM-71001-920-XL</td><td>Trail Hound Rain Vest – Waterproof Pet Coat with Reflective Trim &amp; Adjustable Fit – Lightweight, Breathable Jacket for Wet Weather Walks – Fits All Breeds - XL - (Bone)</td><td class='num'>1</td><td class='num'>$34.79</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Shopify Direct</td><td>10001-100-00002-OLD</td><td>Archived Travel Umbrella</td><td class='num'>1</td><td class='num'>$34.50</td></tr><tr><td>Amazon</td><td>FBA-1K001-DT2-00009</td><td>Weatherman Kids Umbrella Daniel Tiger – Toddler &amp; Child Umbrella for Boys &amp; Girls – Pinch-Proof, Soft Edges, Lightweight Stick Umbrella – Durable Travel Umbrellas for School, Park, Beach (Katerina)</td><td class='num'>1</td><td class='num'>$33.19</td></tr><tr><td>Shopify Direct</td><td>WM-1K001-000-O/S</td><td>Kids Umbrella – Colorstorm</td><td class='num'>1</td><td class='num'>$28.90</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$11.99</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$10.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$7.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.89</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$6.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$5.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.69</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$4.19</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$2.98</td></tr><tr><td>Shopify Direct</td><td>UNKNOWN</td><td>Checkout+</td><td class='num'>1</td><td class='num'>$2.98</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
