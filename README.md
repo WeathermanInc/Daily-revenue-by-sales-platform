@@ -220,14 +220,15 @@ Creative deck (October 2026): [`1Z5rlR-udC7_YHhbIVwuIQChI5nEz_72RMd5ODkSr5bA`](h
 |---|---|
 | **MER** | Ads ÷ revenue × 100 (not ROAS× or P&L) |
 | **YoY (slides 4 / 6 / 9)** | Triple Whale Summary for **same MTD window** last year (e.g. Oct 1–10 2025 vs Oct 2026 MTD). `daily_archive` has no 2025 days — do not leave “archive pending” when TW is available |
-| **Amazon CVR / repeat purchase** | Not in Sellerboard daily export → show `—` (blank is intentional) |
+| **Amazon CVR / repeat purchase** | Prefer Sellerboard; if missing for current month, **carry prior-month MBR exit** into current + prior slots (Sept-style cards) and note the carry in Risks — do not leave blank |
 | **Top landing pages (slide 7)** | Per-page paid landing SQL is not stable on TW API; clear stale September sessions and note pending until UI export is wired |
 | **Headers** | Arial bold ~20–22 pt on section titles; WXM All-Channels total **48 pt** |
-| **Amazon MoM priors (slide 8)** | Pull Sep ROAS/CVR/ACOS/TACOS/RPR/net from the closed September MBR (not blanks) |
-| **Amazon YoY ads priors (slide 9)** | Until Oct 2025 Sellerboard export exists, use Sept 2025 Sellerboard pack; label source in Risks |
-| **Retailer revenue cards** | Primary $ value ~36 pt; MoM % stays compact (~12 pt) |
+| **Amazon MoM priors (slide 8)** | Full prior $ like September (not compact `$405.7K`); priors = plain dark text; **only** %/pts deltas sit in colored pills |
+| **Amazon YoY ads priors (slide 9)** | Until Oct 2025 Sellerboard export exists, use Sept 2025 Sellerboard pack; fill CVR/RPR current + pts pills; label source in Risks |
+| **Retailer revenue cards** | September style: `Revenue\\n$…\\n     ±x% MoM` (indented soft MoM, no red highlight fill) |
 | **Charts 12–13** | Line-bar combo; **insert below the title** (leave ~1.6–1.8M EMU top clearance so titles stay visible) |
-| **Slide 15 Channel Mix** | Match September layout: titled “Channel Mix: Revenue”, % share bars, Sep vs Oct MTD dollar totals |
+| **Slide 15 Channel Mix** | Granular buckets: Email, SMS, Direct, Paid Search, Paid Social, Affiliates, Organic Social, Organic Search, Referral, Unassigned + MoM mix-shift panel (`channel_mix_granular.png`) |
+| **Slide 16 New vs Returning** | Legend at **bottom**; New (light) on top of stack, Returning (dark) on bottom |
 | **Slide 22** | Blue navy table header (not maroon) |
 | **Slide 24** | Color-coded OOS cards (`oos_pretty.png`) |
 | **Slides 19–24** | **Delete** layout “Click to add title/text” placeholders (empty text still shows the hint) |
@@ -243,9 +244,10 @@ python scripts/update_monthly_deck.py --month 2026-10 \
 # → output/monthly_decks/Weatherman — October 2026 Monthly Business Review.pptx
 # → output/monthly_decks/slides_plan_2026-10.json
 
-# Chart PNGs for slides 12–13, 22, 24:
+# Chart PNGs for slides 12–13, 15–16, 22, 24:
 python scripts/render_monthly_deck_charts.py --month 2026-10
-# → output/monthly_decks/charts/ytd_linebar_*.png, table_retailers_blue.png, oos_pretty.png
+# → ytd_linebar_*.png, channel_mix_granular.png, new_vs_returning.png,
+#   table_retailers_blue.png, oos_pretty.png
 ```
 
 Apply the Slides plan with a service account (or Drive MCP for image inserts):

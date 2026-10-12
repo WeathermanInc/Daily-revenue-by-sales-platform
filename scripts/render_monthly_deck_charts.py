@@ -6,7 +6,8 @@ creative deck via Drive MCP ``insertSlidesLocalImage`` (or Slides API):
 
 * Slides 12–13 — YTD **line-bar** (channel bars + all-channel line).
   Insert **below** the slide title (~y ≥ 1.6M EMU) so titles stay visible.
-* Slide 15 — Channel Mix titled % share chart (`channel_mix_titled.png`)
+* Slide 15 — Channel Mix granular % share + MoM mix shift (`channel_mix_granular.png`)
+* Slide 16 — New vs Returning with legend at bottom (`new_vs_returning.png`)
 * Slide 22 — retailers metrics table (blue header)
 * Slide 24 — potential OOS SKU cards
 
@@ -202,6 +203,95 @@ def render_oos_pretty(out: Path, oos: list[tuple], filename: str) -> Path:
     return path
 
 
+def render_channel_mix_granular(
+    out: Path,
+    *,
+    rows: list[tuple[str, float, float]],
+    prior_label: str,
+    current_label: str,
+    filename: str = "channel_mix_granular.png",
+) -> Path:
+    """September-style Channel Mix: Email…Unassigned bars + MoM mix-shift panel."""
+    cur_tot = sum(r[1] for r in rows) or 1.0
+    pri_tot = sum(r[2] for r in rows) or 1.0
+    shares = [
+        (lab, 100 * c / cur_tot, 100 * p / pri_tot, 100 * c / cur_tot - 100 * p / pri_tot)
+        for lab, c, p in rows
+    ]
+    fig = plt.figure(figsize=(13.0, 6.4), dpi=160)
+    fig.text(0.02, 0.96, "Channel Mix: Revenue", fontsize=22, fontweight="bold", color="#0f172a", va="top")
+    fig.text(0.02, 0.91, "% SHARE OF REVENUE", fontsize=11, color="#64748b", va="top", fontweight="bold")
+    fig.text(0.62, 0.96, f"${pri_tot:,.0f}", fontsize=18, fontweight="bold", color="#2563eb", ha="right", va="top")
+    fig.text(0.62, 0.915, prior_label, fontsize=9, color="#64748b", ha="right", va="top")
+    fig.text(0.78, 0.96, f"${cur_tot:,.0f}", fontsize=18, fontweight="bold", color="#dc2626", ha="right", va="top")
+    fig.text(0.78, 0.915, current_label, fontsize=9, color="#64748b", ha="right", va="top")
+
+    ax = fig.add_axes([0.06, 0.14, 0.58, 0.68])
+    labs = [s[0] for s in shares]
+    x = np.arange(len(labs))
+    w = 0.36
+    ax.bar(x - w / 2, [s[2] for s in shares], w, label=prior_label, color="#2563eb")
+    ax.bar(x + w / 2, [s[1] for s in shares], w, label=current_label, color="#dc2626")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labs, rotation=30, ha="right", fontsize=8)
+    ax.set_ylabel("% Share of Revenue")
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.legend(frameon=False, fontsize=9)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.grid(axis="y", alpha=0.25)
+
+    ax2 = fig.add_axes([0.68, 0.14, 0.30, 0.68])
+    ax2.axis("off")
+    ax2.set_xlim(0, 1)
+    ax2.set_ylim(0, 1)
+    ax2.text(0.0, 0.98, "MoM Mix Shift", fontsize=14, fontweight="bold", color="#0f172a", va="top")
+    y = 0.90
+    for lab, _cs, _ps, sh in sorted(shares, key=lambda s: -s[3]):
+        color = "#16a34a" if sh >= 0 else "#dc2626"
+        sign = "+" if sh >= 0 else ""
+        ax2.text(0.0, y, lab, fontsize=10, color="#334155", va="top")
+        ax2.text(1.0, y, f"{sign}{sh:.1f} pts", fontsize=10, color=color, ha="right", va="top", fontweight="bold")
+        y -= 0.085
+    path = out / filename
+    fig.savefig(path, facecolor="white")
+    plt.close()
+    return path
+
+
+def render_new_vs_returning(
+    out: Path,
+    *,
+    cats: list[str],
+    returning: list[float],
+    new: list[float],
+    filename: str = "new_vs_returning.png",
+) -> Path:
+    """Stacked bars with New on top, Returning on bottom, legend at bottom center."""
+    fig, ax = plt.subplots(figsize=(10.5, 5.2), dpi=160)
+    x = np.arange(len(cats))
+    width = 0.55
+    ax.bar(x, returning, width, label="Returning Customers", color="#1e3a5f")
+    ax.bar(x, new, width, bottom=returning, label="New Customers", color="#93c5fd")
+    for i in range(len(cats)):
+        ax.text(i, returning[i] / 2, f"{returning[i]:.0f}%", ha="center", va="center", color="white", fontweight="bold", fontsize=14)
+        ax.text(i, returning[i] + new[i] / 2, f"{new[i]:.0f}%", ha="center", va="center", color="#1e3a5f", fontweight="bold", fontsize=14)
+    ax.set_xticks(x)
+    ax.set_xticklabels(cats, fontsize=12)
+    ax.set_ylim(0, 110)
+    ax.set_ylabel("% of Customers")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=2, frameon=False, fontsize=11)
+    ax.set_title("New vs Returning Customers", fontsize=14, pad=12)
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.22)
+    path = out / filename
+    fig.savefig(path, facecolor="white", bbox_inches="tight")
+    plt.close()
+    return path
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--month", default="2026-10", help="YYYY-MM label for defaults")
@@ -255,7 +345,55 @@ def main() -> None:
             ],
             "oos_pretty.png",
         ),
+        render_new_vs_returning(
+            args.out,
+            cats=["September 2026", "October 2026 MTD"],
+            returning=[27, 39],
+            new=[73, 61],
+        ),
     ]
+    # Channel mix defaults are rebuilt from TW cache when present; else skip.
+    mix_cache = ROOT / "data" / "triple_whale_cache" / f"{args.month}.json"
+    if mix_cache.exists():
+        import json
+
+        tw = json.loads(mix_cache.read_text())
+        cur, pri = tw["channels"], tw["prior_channels"]
+
+        def _rev(bucket: dict, names: tuple[str, ...]) -> float:
+            return sum(float((bucket.get(n) or {}).get("revenue") or 0) for n in names)
+
+        buckets = [
+            ("Email", ("klaviyo", "triplesurvey_email", "shopify_email", "OrderlyEmails", "listrak")),
+            ("SMS", ("attentive", "triplesurvey_text")),
+            ("Direct", ("Direct",)),
+            ("Paid Search", ("google-ads", "googlepaid", "bing")),
+            ("Paid Social", ("facebook-ads",)),
+            ("Affiliates", ("influencers",)),
+            ("Organic Social", ("organic_and_social",)),
+            ("Organic Search", ("organic",)),
+            ("Referral", ("linkinbo", "later-linkinbio")),
+        ]
+        used: set[str] = set()
+        for _, names in buckets:
+            used.update(names)
+        rows = [(lab, _rev(cur, names), _rev(pri, names)) for lab, names in buckets]
+        rows.append(
+            (
+                "Unassigned",
+                sum(float(v.get("revenue") or 0) for k, v in cur.items() if k not in used and k.lower() not in {"amazon", "excluded"}),
+                sum(float(v.get("revenue") or 0) for k, v in pri.items() if k not in used and k.lower() not in {"amazon", "excluded"}),
+            )
+        )
+        rows = [r for r in rows if r[1] or r[2]]
+        paths.append(
+            render_channel_mix_granular(
+                args.out,
+                rows=rows,
+                prior_label="September 2026",
+                current_label="October 2026 MTD",
+            )
+        )
     for p in paths:
         print("wrote", p)
 

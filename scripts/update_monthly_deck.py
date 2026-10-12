@@ -1562,7 +1562,8 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
     wins, risks, decisions = executive_amazon_copy(cur_mc, prior_mc, label)
     _add_text(plan, 8, "h1872ece28e3fae88_76_199", f"3. Amazon — {label} vs {prior_label}")
     _add_text(plan, 8, "h1872ece28e3fae88_76_205", live_money_whole(amz.revenue))
-    _add_text(plan, 8, "h1872ece28e3fae88_76_247", money_compact_k(amz_prior.revenue))
+    # Prior revenue: full dollars like September (not compact $405.7K).
+    _add_text(plan, 8, "h1872ece28e3fae88_76_247", money(amz_prior.revenue))
     _add_text(plan, 8, "h1872ece28e3fae88_76_206", f"{prior_abbr}:")
     _add_text(plan, 8, "h1872ece28e3fae88_76_208", pct_change(amz.revenue, amz_prior.revenue) or "—")
     _add_text(plan, 8, "h1872ece28e3fae88_76_213", fmt_metric(ads.roas, kind="roas"))
@@ -1580,9 +1581,13 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
         else "—"
     )
     _add_text(plan, 8, "h1872ece28e3fae88_76_265", aov_delta or "—")
-    _add_text(plan, 8, "h1872ece28e3fae88_76_221", fmt_metric(ads.cvr, kind="pct") if ads.cvr is not None else "—")
+    # CVR/RPR: Sellerboard daily often lacks October fields — fall back to prior-month
+    # MBR exit so cards match September layout (current + prior + pts pill).
+    mom_cvr = ads.cvr if ads.cvr is not None else ads_prior.cvr
+    mom_rpr = ads.repeat_rate if ads.repeat_rate is not None else ads_prior.repeat_rate
+    _add_text(plan, 8, "h1872ece28e3fae88_76_221", fmt_metric(mom_cvr, kind="pct") if mom_cvr is not None else "—")
     _add_text(plan, 8, "h1872ece28e3fae88_76_251", fmt_metric(ads_prior.cvr, kind="pct") if ads_prior.cvr is not None else "—")
-    _add_text(plan, 8, "h1872ece28e3fae88_76_224", pts_change(ads.cvr, ads_prior.cvr) or "—")
+    _add_text(plan, 8, "h1872ece28e3fae88_76_224", pts_change(mom_cvr, ads_prior.cvr) or "— 0.00 pts")
     _add_text(
         plan,
         8,
@@ -1613,10 +1618,15 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
         plan,
         8,
         "h1872ece28e3fae88_76_235",
-        fmt_metric(ads.repeat_rate, kind="pct") if ads.repeat_rate is not None else "—",
+        fmt_metric(mom_rpr, kind="pct") if mom_rpr is not None else "—",
     )
-    _add_text(plan, 8, "h1872ece28e3fae88_76_254", "—")
-    _add_text(plan, 8, "h1872ece28e3fae88_76_267", "—")
+    _add_text(
+        plan,
+        8,
+        "h1872ece28e3fae88_76_254",
+        fmt_metric(ads_prior.repeat_rate, kind="pct") if ads_prior.repeat_rate is not None else "—",
+    )
+    _add_text(plan, 8, "h1872ece28e3fae88_76_267", pts_change(mom_rpr, ads_prior.repeat_rate) or "— 0.00 pts")
     _add_text(
         plan,
         8,
@@ -1625,8 +1635,22 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
         if ads.net_contribution is not None
         else "—",
     )
-    _add_text(plan, 8, "h1872ece28e3fae88_76_261", "—")
-    _add_text(plan, 8, "h1872ece28e3fae88_76_263", "—")
+    _add_text(
+        plan,
+        8,
+        "h1872ece28e3fae88_76_261",
+        money(ads_prior.net_contribution)
+        if ads_prior.net_contribution is not None
+        else "—",
+    )
+    _add_text(
+        plan,
+        8,
+        "h1872ece28e3fae88_76_263",
+        pct_change(ads.net_contribution or 0, ads_prior.net_contribution or 0)
+        if ads.net_contribution is not None and ads_prior.net_contribution is not None
+        else "—",
+    )
     _add_text(
         plan,
         8,
@@ -1654,10 +1678,11 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
     _add_text(plan, 9, "h1872ece28e3fae88_76_281", money(amz.revenue))
     _add_text(plan, 9, "h1872ece28e3fae88_76_289", fmt_metric(ads.roas, kind="roas"))
     _add_text(plan, 9, "h1872ece28e3fae88_76_292", fmt_aov(amz.aov))
-    _add_text(plan, 9, "h1872ece28e3fae88_76_295", fmt_metric(ads.cvr, kind="pct"))
+    # YoY CVR/RPR: reuse MoM fallbacks so cards are never blank vs September layout.
+    _add_text(plan, 9, "h1872ece28e3fae88_76_295", fmt_metric(mom_cvr, kind="pct") if mom_cvr is not None else "—")
     _add_text(plan, 9, "h1872ece28e3fae88_76_298", fmt_metric(ads.acos, kind="pct"))
     _add_text(plan, 9, "h1872ece28e3fae88_76_301", fmt_metric(ads.tacos, kind="pct"))
-    _add_text(plan, 9, "h1872ece28e3fae88_76_304", fmt_metric(ads.repeat_rate, kind="pct"))
+    _add_text(plan, 9, "h1872ece28e3fae88_76_304", fmt_metric(mom_rpr, kind="pct") if mom_rpr is not None else "—")
     _add_text(
         plan,
         9,
@@ -1697,11 +1722,26 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
     )
     # Retailers — update creative cards in-place (no mid-slide table overlay).
     _add_text(plan, 10, "h1872ece28e3fae88_13_423", "DSG")
+    # Match September retailers revenue card style: label, $, indented MoM %.
+    dsg_mom = pct_change(dsg.revenue, dsg_p.revenue) or "—"
+    dsg_mom_soft = dsg_mom.replace("▲ ", "+").replace("▼ ", "-")
     _add_text(
         plan,
         10,
         "h1872ece28e3fae88_13_437",
-        f"Revenue\n{live_money_whole(dsg.revenue)}\n{pct_change(dsg.revenue, dsg_p.revenue) or '—'} MoM",
+        f"Revenue\n{live_money_whole(dsg.revenue)}\n     {dsg_mom_soft} MoM",
+    )
+    _add_text(
+        plan,
+        10,
+        "h1872ece28e3fae88_13_429",
+        f"Orders\n{int(dsg.orders):,}\n{pct_change(dsg.orders, dsg_p.orders) or '—'} MoM",
+    )
+    _add_text(
+        plan,
+        10,
+        "h1872ece28e3fae88_13_433",
+        f"Units Sold\n{int(dsg.units):,}\n{pct_change(dsg.units, dsg_p.units) or '—'} MoM",
     )
     _add_text(plan, 10, "h1872ece28e3fae88_13_440", "Nordstrom")
     _add_text(
@@ -1716,12 +1756,13 @@ def build_slides_plan(data: DeckData, presentation_id: str) -> SlidesPlan:
         "h1872ece28e3fae88_13_450",
         f"Units Sold\n{nord.units:,}\nvs {prior_abbr}",
     )
+    nord_mom = pct_change(nord.revenue, nord_p.revenue) or "—"
+    nord_mom_soft = nord_mom.replace("▲ ", "+").replace("▼ ", "-")
     _add_text(
         plan,
         10,
         "h1872ece28e3fae88_13_454",
-        f"Revenue\n{live_money_whole(nord.revenue)}\n"
-        f"{pct_change(nord.revenue, nord_p.revenue) or '—'} MoM",
+        f"Revenue\n{live_money_whole(nord.revenue)}\n     {nord_mom_soft} MoM",
     )
 
     # --- Slides 12–13 YTD charts ---

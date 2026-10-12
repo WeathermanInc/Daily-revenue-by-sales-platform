@@ -967,14 +967,22 @@ def _build_mix_rows(
     current: dict[str, dict[str, float]],
     prior: dict[str, dict[str, float]],
 ) -> list[ChannelMixRow]:
-    """Collapse pixel channels into the Channel Mix slide buckets."""
+    """Map pixel channels into September-style granular Channel Mix buckets.
+
+    Order matches the MoM Mix Shift panel: Email, SMS, Direct, Paid Search,
+    Paid Social, Affiliates, Organic Social, Organic Search, Referral, Unassigned.
+    """
     buckets = (
+        ("Email", ("klaviyo", "triplesurvey_email", "shopify_email", "OrderlyEmails", "listrak")),
+        ("SMS", ("attentive", "triplesurvey_text")),
+        ("Direct", ("Direct",)),
+        ("Paid Search", ("google-ads", "googlepaid", "bing")),
         ("Paid Social", ("facebook-ads",)),
-        ("Paid Search", ("google-ads", "googlepaid")),
-        ("Email/SMS", ("klaviyo", "attentive")),
-        ("Organic/Direct", ("Direct", "organic", "organic_and_social", "Non-attributed", "shop_app")),
         ("Affiliates", ("influencers",)),
-        ("Other", ()),  # filled below
+        ("Organic Social", ("organic_and_social",)),
+        ("Organic Search", ("organic",)),
+        ("Referral", ("linkinbo", "later-linkinbio")),
+        ("Unassigned", ()),  # filled below
     )
     used: set[str] = set()
     for _, names in buckets:
@@ -982,7 +990,7 @@ def _build_mix_rows(
 
     rows: list[ChannelMixRow] = []
     for label, names in buckets:
-        if label == "Other":
+        if label == "Unassigned":
             cur = sum(
                 float(v.get("revenue") or 0)
                 for k, v in current.items()
@@ -998,7 +1006,9 @@ def _build_mix_rows(
             prv = _channel_sum(prior, names, "revenue")
         if cur or prv:
             rows.append(ChannelMixRow(label, prv, cur))
-    rows.sort(key=lambda r: r.current_revenue, reverse=True)
+    # Keep September display order (not sorted by revenue).
+    order = {label: i for i, (label, _) in enumerate(buckets)}
+    rows.sort(key=lambda r: order.get(r.channel, 99))
     return rows
 
 
