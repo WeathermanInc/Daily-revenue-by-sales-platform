@@ -6,8 +6,8 @@
     "Shirts": 0,
     "Umbrellas": 2
   },
-  "generated_at_utc": "2026-10-26T19:57:28.709957Z",
-  "gross_revenue": 170.0,
+  "generated_at_utc": "2026-10-27T19:26:26.633318Z",
+  "gross_revenue": 154.99,
   "order_count": 2,
   "queried_ship_node_types": [
     "SellerFulfilled",
@@ -33,18 +33,28 @@
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-10-25",
+  "report_date": "2026-10-26",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 170.0,
-      "item_name": "Weatherman Umbrella - Stick Umbrella - Windproof Umbrella Resists Up to 55 MPH Winds (Navy Blue)",
-      "sku": "11005-600-221-55",
+      "gross_revenue": 85.0,
+      "item_name": "Weatherman Stick Umbrella Auto Open Fiberglass 44 Inches (Sage)",
+      "sku": "FBM-11005-310-00002",
       "statuses": [
         "Shipped"
       ],
-      "units": 2
+      "units": 1
+    },
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 69.99,
+      "item_name": "Weatherman Golf Lite Umbrella Fiberglass 56 Inches (White)",
+      "sku": "FBM-14M00-100-00004",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
     }
   ],
   "source": "Walmart Marketplace Orders API",
@@ -52,11 +62,11 @@
   "timezone": "America/New_York",
   "total_units": 2,
   "window_local": {
-    "end_exclusive": "2026-10-26T00:00:00 America/New_York",
-    "start_inclusive": "2026-10-25T00:00:00 America/New_York"
+    "end_exclusive": "2026-10-27T00:00:00 America/New_York",
+    "start_inclusive": "2026-10-26T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-10-26T04:00:00Z",
-    "start_inclusive": "2026-10-25T04:00:00Z"
+    "end_exclusive": "2026-10-27T04:00:00Z",
+    "start_inclusive": "2026-10-26T04:00:00Z"
   }
 }
