@@ -4,11 +4,11 @@
     "Other": 0,
     "Ponchos": 0,
     "Shirts": 0,
-    "Umbrellas": 3
+    "Umbrellas": 1
   },
-  "generated_at_utc": "2026-10-28T19:35:38.634510Z",
-  "gross_revenue": 224.98,
-  "order_count": 3,
+  "generated_at_utc": "2026-10-29T19:39:38.835088Z",
+  "gross_revenue": 69.99,
+  "order_count": 1,
   "queried_ship_node_types": [
     "SellerFulfilled",
     "WFSFulfilled"
@@ -26,33 +26,23 @@
     "SellerFulfilled:Shipped": 0,
     "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
-    "WFSFulfilled:Delivered": 1,
-    "WFSFulfilled:Shipped": 2
+    "WFSFulfilled:Delivered": 0,
+    "WFSFulfilled:Shipped": 1
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-10-27",
+  "report_date": "2026-10-28",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 139.98,
-      "item_name": "Weatherman Golf Lite Umbrella Fiberglass 56 Inches (White)",
-      "sku": "FBM-14M00-100-00004",
+      "gross_revenue": 69.99,
+      "item_name": "Weatherman Travel Umbrella, Wind-Resistant Up to 45 MPH, Auto Open/Close, Navy Blue",
+      "sku": "FBM-10001-600-00003",
       "statuses": [
         "Shipped"
-      ],
-      "units": 2
-    },
-    {
-      "category": "Umbrellas",
-      "gross_revenue": 85.0,
-      "item_name": "Weatherman Stick Umbrella Auto Open Fiberglass 44 Inches (Black)",
-      "sku": "FBM-11005-001-221-55",
-      "statuses": [
-        "Delivered"
       ],
       "units": 1
     }
@@ -60,13 +50,13 @@
   "source": "Walmart Marketplace Orders API",
   "status": "complete",
   "timezone": "America/New_York",
-  "total_units": 3,
+  "total_units": 1,
   "window_local": {
-    "end_exclusive": "2026-10-28T00:00:00 America/New_York",
-    "start_inclusive": "2026-10-27T00:00:00 America/New_York"
+    "end_exclusive": "2026-10-29T00:00:00 America/New_York",
+    "start_inclusive": "2026-10-28T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-10-28T04:00:00Z",
-    "start_inclusive": "2026-10-27T04:00:00Z"
+    "end_exclusive": "2026-10-29T04:00:00Z",
+    "start_inclusive": "2026-10-28T04:00:00Z"
   }
 }
