@@ -4,11 +4,11 @@
     "Other": 0,
     "Ponchos": 0,
     "Shirts": 0,
-    "Umbrellas": 0
+    "Umbrellas": 1
   },
-  "generated_at_utc": "2026-11-09T23:26:48.102379Z",
-  "gross_revenue": 0.0,
-  "order_count": 0,
+  "generated_at_utc": "2026-11-10T20:50:25.109348Z",
+  "gross_revenue": 68.99,
+  "order_count": 1,
   "queried_ship_node_types": [
     "SellerFulfilled",
     "WFSFulfilled"
@@ -27,25 +27,36 @@
     "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
     "WFSFulfilled:Delivered": 0,
-    "WFSFulfilled:Shipped": 0
+    "WFSFulfilled:Shipped": 1
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-11-08",
+  "report_date": "2026-11-09",
   "schema_version": 1,
-  "sku_line_items": [],
+  "sku_line_items": [
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 68.99,
+      "item_name": "Weatherman Compact Travel Umbrella Auto Open 38 Inches (Red)",
+      "sku": "10000-200-419-44-WFS",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
+    }
+  ],
   "source": "Walmart Marketplace Orders API",
   "status": "complete",
   "timezone": "America/New_York",
-  "total_units": 0,
+  "total_units": 1,
   "window_local": {
-    "end_exclusive": "2026-11-09T00:00:00 America/New_York",
-    "start_inclusive": "2026-11-08T00:00:00 America/New_York"
+    "end_exclusive": "2026-11-10T00:00:00 America/New_York",
+    "start_inclusive": "2026-11-09T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-11-09T05:00:00Z",
-    "start_inclusive": "2026-11-08T05:00:00Z"
+    "end_exclusive": "2026-11-10T05:00:00Z",
+    "start_inclusive": "2026-11-09T05:00:00Z"
   }
 }
