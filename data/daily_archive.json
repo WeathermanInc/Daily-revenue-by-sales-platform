@@ -3699,6 +3699,43 @@
       "report_date": "2026-11-12",
       "total_revenue": 26364.62,
       "total_units": 398
+    },
+    "2026-11-13": {
+      "platforms": {
+        "amazon": {
+          "available": true,
+          "orders": 368,
+          "revenue": 26812.02,
+          "units": 389
+        },
+        "dsg": {
+          "available": true,
+          "orders": 1,
+          "revenue": 35.3,
+          "units": 1
+        },
+        "nordstrom": {
+          "available": true,
+          "orders": 11,
+          "revenue": 963.0,
+          "units": 12
+        },
+        "shopify_direct": {
+          "available": true,
+          "orders": 52,
+          "revenue": 6121.78,
+          "units": 118
+        },
+        "walmart": {
+          "available": true,
+          "orders": 1,
+          "revenue": 40.0,
+          "units": 1
+        }
+      },
+      "report_date": "2026-11-13",
+      "total_revenue": 33972.1,
+      "total_units": 521
     }
   }
 }
