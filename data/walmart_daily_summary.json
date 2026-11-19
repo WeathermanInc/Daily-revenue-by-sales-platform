@@ -4,11 +4,11 @@
     "Other": 0,
     "Ponchos": 0,
     "Shirts": 0,
-    "Umbrellas": 0
+    "Umbrellas": 4
   },
-  "generated_at_utc": "2026-11-18T21:58:24.473840Z",
-  "gross_revenue": 0.0,
-  "order_count": 0,
+  "generated_at_utc": "2026-11-19T22:10:10.416661Z",
+  "gross_revenue": 212.97,
+  "order_count": 4,
   "queried_ship_node_types": [
     "SellerFulfilled",
     "WFSFulfilled"
@@ -26,26 +26,48 @@
     "SellerFulfilled:Shipped": 0,
     "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
-    "WFSFulfilled:Delivered": 0,
-    "WFSFulfilled:Shipped": 0
+    "WFSFulfilled:Delivered": 1,
+    "WFSFulfilled:Shipped": 3
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-11-17",
+  "report_date": "2026-11-18",
   "schema_version": 1,
-  "sku_line_items": [],
+  "sku_line_items": [
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 157.47,
+      "item_name": "Weatherman Compact Travel Umbrella Auto Open 38 Inches (Sage)",
+      "sku": "FBM-10001-310-00007",
+      "statuses": [
+        "Delivered",
+        "Shipped"
+      ],
+      "units": 3
+    },
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 55.5,
+      "item_name": "Weatherman Collapsible Travel Umbrella 40 Inches (Navy Blue)",
+      "sku": "12005-600-221-51-WFS",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
+    }
+  ],
   "source": "Walmart Marketplace Orders API",
   "status": "complete",
   "timezone": "America/New_York",
-  "total_units": 0,
+  "total_units": 4,
   "window_local": {
-    "end_exclusive": "2026-11-18T00:00:00 America/New_York",
-    "start_inclusive": "2026-11-17T00:00:00 America/New_York"
+    "end_exclusive": "2026-11-19T00:00:00 America/New_York",
+    "start_inclusive": "2026-11-18T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-11-18T05:00:00Z",
-    "start_inclusive": "2026-11-17T05:00:00Z"
+    "end_exclusive": "2026-11-19T05:00:00Z",
+    "start_inclusive": "2026-11-18T05:00:00Z"
   }
 }
