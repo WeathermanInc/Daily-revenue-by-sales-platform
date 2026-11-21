@@ -4,11 +4,11 @@
     "Other": 0,
     "Ponchos": 0,
     "Shirts": 0,
-    "Umbrellas": 8
+    "Umbrellas": 2
   },
-  "generated_at_utc": "2026-11-20T21:49:52.600856Z",
-  "gross_revenue": 414.73,
-  "order_count": 7,
+  "generated_at_utc": "2026-11-21T20:32:27.220620Z",
+  "gross_revenue": 143.49,
+  "order_count": 2,
   "queried_ship_node_types": [
     "SellerFulfilled",
     "WFSFulfilled"
@@ -24,43 +24,23 @@
     "SellerFulfilled:Created": 0,
     "SellerFulfilled:Delivered": 0,
     "SellerFulfilled:Shipped": 0,
-    "WFSFulfilled:Acknowledged": 1,
+    "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
     "WFSFulfilled:Delivered": 1,
-    "WFSFulfilled:Shipped": 5
+    "WFSFulfilled:Shipped": 1
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-11-19",
+  "report_date": "2026-11-20",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 135.0,
-      "item_name": "Weatherman Golf Lite Umbrella Fiberglass 66 Inches (Navy Blue)",
-      "sku": "FBM-14M00-600-00003",
-      "statuses": [
-        "Shipped"
-      ],
-      "units": 2
-    },
-    {
-      "category": "Umbrellas",
-      "gross_revenue": 63.75,
-      "item_name": "Weatherman Umbrella - Stick Umbrella - Windproof Umbrella Resists Up to 55 MPH Winds (Navy Blue)",
-      "sku": "11005-600-221-55",
-      "statuses": [
-        "Shipped"
-      ],
-      "units": 1
-    },
-    {
-      "category": "Umbrellas",
-      "gross_revenue": 56.25,
-      "item_name": "Weatherman Umbrella - Collapsible Umbrella - Windproof Umbrella Resists Up to 55 MPH Winds (White)",
-      "sku": "FBM-12005-100-00004",
+      "gross_revenue": 91.0,
+      "item_name": "Weatherman Golf Umbrella Auto Open Fiberglass 66 Inches (Black)",
+      "sku": "FBM-14M00-001-00001",
       "statuses": [
         "Delivered"
       ],
@@ -68,45 +48,25 @@
     },
     {
       "category": "Umbrellas",
-      "gross_revenue": 56.24,
-      "item_name": "Weatherman Collapsible Travel Umbrella 40 Inches (Navy Blue)",
-      "sku": "12005-600-221-51-WFS",
-      "statuses": [
-        "Shipped"
-      ],
-      "units": 1
-    },
-    {
-      "category": "Umbrellas",
       "gross_revenue": 52.49,
-      "item_name": "Weatherman Collapsible Travel Umbrella Auto Open 40 Inches (Black)",
-      "sku": "FBM-12005-001-221-51",
-      "statuses": [
-        "Acknowledged"
-      ],
-      "units": 1
-    },
-    {
-      "category": "Umbrellas",
-      "gross_revenue": 51.0,
-      "item_name": "Weatherman Kids Stick Umbrella Lightweight Soft Edge Design",
-      "sku": "1K000-200-00012-WFS",
+      "item_name": "Weatherman Compact Travel Umbrella Auto Open 38 Inches (Sage)",
+      "sku": "FBM-10001-310-00007",
       "statuses": [
         "Shipped"
       ],
-      "units": 2
+      "units": 1
     }
   ],
   "source": "Walmart Marketplace Orders API",
   "status": "complete",
   "timezone": "America/New_York",
-  "total_units": 8,
+  "total_units": 2,
   "window_local": {
-    "end_exclusive": "2026-11-20T00:00:00 America/New_York",
-    "start_inclusive": "2026-11-19T00:00:00 America/New_York"
+    "end_exclusive": "2026-11-21T00:00:00 America/New_York",
+    "start_inclusive": "2026-11-20T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-11-20T05:00:00Z",
-    "start_inclusive": "2026-11-19T05:00:00Z"
+    "end_exclusive": "2026-11-21T05:00:00Z",
+    "start_inclusive": "2026-11-20T05:00:00Z"
   }
 }
