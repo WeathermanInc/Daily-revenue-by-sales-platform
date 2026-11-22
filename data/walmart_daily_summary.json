@@ -6,8 +6,8 @@
     "Shirts": 0,
     "Umbrellas": 2
   },
-  "generated_at_utc": "2026-11-21T20:32:27.220620Z",
-  "gross_revenue": 143.49,
+  "generated_at_utc": "2026-11-22T20:44:00.336861Z",
+  "gross_revenue": 116.24,
   "order_count": 2,
   "queried_ship_node_types": [
     "SellerFulfilled",
@@ -26,23 +26,23 @@
     "SellerFulfilled:Shipped": 0,
     "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
-    "WFSFulfilled:Delivered": 1,
-    "WFSFulfilled:Shipped": 1
+    "WFSFulfilled:Delivered": 0,
+    "WFSFulfilled:Shipped": 2
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-11-20",
+  "report_date": "2026-11-21",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 91.0,
-      "item_name": "Weatherman Golf Umbrella Auto Open Fiberglass 66 Inches (Black)",
-      "sku": "FBM-14M00-001-00001",
+      "gross_revenue": 63.75,
+      "item_name": "Weatherman Stick Umbrella Auto Open Fiberglass 44 Inches (Sage)",
+      "sku": "FBM-11005-310-00002",
       "statuses": [
-        "Delivered"
+        "Shipped"
       ],
       "units": 1
     },
@@ -62,11 +62,11 @@
   "timezone": "America/New_York",
   "total_units": 2,
   "window_local": {
-    "end_exclusive": "2026-11-21T00:00:00 America/New_York",
-    "start_inclusive": "2026-11-20T00:00:00 America/New_York"
+    "end_exclusive": "2026-11-22T00:00:00 America/New_York",
+    "start_inclusive": "2026-11-21T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-11-21T05:00:00Z",
-    "start_inclusive": "2026-11-20T05:00:00Z"
+    "end_exclusive": "2026-11-22T05:00:00Z",
+    "start_inclusive": "2026-11-21T05:00:00Z"
   }
 }
