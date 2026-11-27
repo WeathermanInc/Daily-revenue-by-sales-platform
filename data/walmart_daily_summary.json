@@ -4,11 +4,11 @@
     "Other": 0,
     "Ponchos": 0,
     "Shirts": 0,
-    "Umbrellas": 1
+    "Umbrellas": 4
   },
-  "generated_at_utc": "2026-11-26T22:59:50.755642Z",
-  "gross_revenue": 51.75,
-  "order_count": 1,
+  "generated_at_utc": "2026-11-27T22:43:40.484368Z",
+  "gross_revenue": 184.08,
+  "order_count": 4,
   "queried_ship_node_types": [
     "SellerFulfilled",
     "WFSFulfilled"
@@ -27,20 +27,50 @@
     "WFSFulfilled:Acknowledged": 0,
     "WFSFulfilled:Created": 0,
     "WFSFulfilled:Delivered": 0,
-    "WFSFulfilled:Shipped": 1
+    "WFSFulfilled:Shipped": 4
   },
   "reconciliation": {
     "revenue_variance": 0.0,
     "unit_variance": 0
   },
-  "report_date": "2026-11-25",
+  "report_date": "2026-11-26",
   "schema_version": 1,
   "sku_line_items": [
     {
       "category": "Umbrellas",
-      "gross_revenue": 51.75,
-      "item_name": "Weatherman Travel Umbrella, 38 in, Auto Open and Close (Navy blue)",
-      "sku": "FBM-10001-600-00003",
+      "gross_revenue": 59.5,
+      "item_name": "Weatherman Stick Umbrella Auto Open Fiberglass 44 Inches (Sage)",
+      "sku": "FBM-11005-310-00002",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
+    },
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 51.8,
+      "item_name": "Weatherman Collapsible Travel Umbrella Auto Open Fiberglass (Sage)",
+      "sku": "FBM-12005-310-00003",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
+    },
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 48.99,
+      "item_name": "Weatherman Compact Travel Umbrella Auto Open 38 Inches (Sage)",
+      "sku": "FBM-10001-310-00007",
+      "statuses": [
+        "Shipped"
+      ],
+      "units": 1
+    },
+    {
+      "category": "Umbrellas",
+      "gross_revenue": 23.79,
+      "item_name": "Weatherman Kids Stick Umbrella Lightweight Soft Edge Design",
+      "sku": "1K000-200-00012-WFS",
       "statuses": [
         "Shipped"
       ],
@@ -50,13 +80,13 @@
   "source": "Walmart Marketplace Orders API",
   "status": "complete",
   "timezone": "America/New_York",
-  "total_units": 1,
+  "total_units": 4,
   "window_local": {
-    "end_exclusive": "2026-11-26T00:00:00 America/New_York",
-    "start_inclusive": "2026-11-25T00:00:00 America/New_York"
+    "end_exclusive": "2026-11-27T00:00:00 America/New_York",
+    "start_inclusive": "2026-11-26T00:00:00 America/New_York"
   },
   "window_utc": {
-    "end_exclusive": "2026-11-26T05:00:00Z",
-    "start_inclusive": "2026-11-25T05:00:00Z"
+    "end_exclusive": "2026-11-27T05:00:00Z",
+    "start_inclusive": "2026-11-26T05:00:00Z"
   }
 }
